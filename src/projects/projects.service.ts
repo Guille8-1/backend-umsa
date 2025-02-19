@@ -5,7 +5,7 @@ import { UpdateProjectDto } from './dto/update-project.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Projects } from './entities/projects.entity';
 import { Comments } from './entities/comments.entity';
-import { IsNull, Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CommentProjectDto } from './dto/comments-project.dto';
 
 
@@ -19,21 +19,22 @@ export class ProjectsService {
   ) {}
 
   async createProject(createProjectDto: CreateProjectDto, res: Response) {
-    const { user, titulo, facultad, status, etiquetas, tipo,asignados, prioridad } =
+    const { user, titulo, facultad, estado, etiquetas, tipo,asignado, prioridad } =
       createProjectDto;
-    const validStatus = ['pendiente', 'activo'];
-    if (validStatus.some((statusMatch) => status === statusMatch)) {
+      console.log(createProjectDto)
+    const validStatus = ['pendiente', 'activo', 'en_mora'];
+    if (validStatus.some((statusMatch) => estado === statusMatch)) {
       const validProject = await this.projectRepository.find({
-        where: { status: status },
+        where: { estado: estado },
       });
       const projecTitles: string[] = [];
       for (const project of validProject) {
         projecTitles.push(project.titulo);
       }
       if (projecTitles.some((titleMatch) => titulo == titleMatch)) {
-        return res.json('Proyecto Existente');
+        return res.status(400).json('Proyecto Existente');
       }
-      const assignees = JSON.parse(asignados.split('[]')[0]);
+      const assignees = JSON.parse(asignado.split('[]')[0]);
       const projectAssigned: string[] = [];
       for (const assnee of assignees) {
         projectAssigned.push(assnee);
@@ -42,7 +43,7 @@ export class ProjectsService {
         user,
         titulo,
         facultad,
-        status,
+        estado,
         etiquetas,
         tipo,
         asignados: projectAssigned,
@@ -65,7 +66,10 @@ export class ProjectsService {
 
   async findAllProjects(res: Response) {
     const availableProjects = await this.projectRepository.find({
-      where: {status: 'pendiente'}
+      where: {
+        estado: In(['activo', 'pendiente'])
+      },
+      relations:['comentarios']
     })
     return res.status(201).json(availableProjects);
   }
@@ -110,14 +114,14 @@ export class ProjectsService {
       .execute()
     }
 
-    if(updateProjectDto.status){
+    if(updateProjectDto.estado){
       await this.projectRepository
       .createQueryBuilder()
       .update(Projects)
       .where("id = :id", {id:id})
       .set(
         {
-          status: updateProjectDto.status
+          estado: updateProjectDto.estado
         }
       )
       .execute()

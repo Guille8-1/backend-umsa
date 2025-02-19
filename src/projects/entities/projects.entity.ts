@@ -15,7 +15,7 @@ export class Projects {
     facultad: string
 
     @Column({type:'varchar', length:20})
-    status: string
+    estado: string
 
     @Column({type:'varchar', length:20})
     etiquetas: string

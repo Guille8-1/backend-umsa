@@ -19,10 +19,10 @@ export class Users {
     admin: boolean
     
     @CreateDateColumn({type: Date})
-    createdDate: Date
+    created: Date
 
     @UpdateDateColumn({type: Date})
-    updateColumn: Date
+    updated: Date
 
     @OneToMany( () => Projects, (porjects) => porjects.user ,{
         cascade: true,

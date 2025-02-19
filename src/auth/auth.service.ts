@@ -95,6 +95,15 @@ export class AuthService {
         res.json(`obteniendo usuario ${id}`)
     }
 
+    async getAllUsers(res: Response){
+        const allUsers = await this.userRepository
+        .createQueryBuilder()
+        .select(['name', 'email', 'admin', 'created'])
+        .execute()
+        
+        res.status(201).json(allUsers)
+    }
+
     async deleteUser(id: number, res: Response) {
         const user = await this.userRepository.findOne({
             where: {id:id},

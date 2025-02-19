@@ -38,12 +38,12 @@ Content-Type: application/json
 {
     "user": 74,
     "titulo": "proyecto test 9",
-    "facultad": "Ciencias Puras",
-    "status": "pendiente",
+    "facultad": "csPuras",
+    "estado": "pendiente",
     "etiquetas": "nuevo",
     "tipo": "Construccion",
-    "asignados":"[\"asignados 3\"]",
-    "prioridad": "moderado"
+    "asignado":"[\"asignados 3\"]",
+    "prioridad": "media"
 }
 
 //Get user with user param id
@@ -60,13 +60,13 @@ POST http://localhost:4000/projects/comment
 Content-Type: application/json
 
 {
-    "projectId":16,
-    "comentarios": "asfasdasfasdasfasd"
+    "projectId":19,
+    "comentarios": "nuevo comentario en el testing"
 }
 
 //Get available projects
 ###
-GET http://localhost:4000/projects/pending
+GET http://localhost:4000/projects/available
 
 //Get project by param id
 ###
@@ -93,3 +93,6 @@ Content-Type: application/json
 {
     "test":"1"
 }
+//get all users
+###
+GET http://localhost:4000/auth/users

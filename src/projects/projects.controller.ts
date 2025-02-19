@@ -30,7 +30,7 @@ export class ProjectsController {
    return this.projectsService.createProjectComment(commentProject ,res)
   }
 
-  @Get('/pending')
+  @Get('/available')
   findAll(@Res() res: Response) {
     return this.projectsService.findAllProjects(res);
   }

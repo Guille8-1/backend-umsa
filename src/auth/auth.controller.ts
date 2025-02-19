@@ -25,6 +25,10 @@ export class AuthController {
     verifyUser (@Res() res: Response, @Req() req: Request ){ 
         return this.authService.verifyUser(res, req)
     }
+    @Get('/users')
+    getUsers(@Res() res: Response) {
+        return this.authService.getAllUsers(res)
+    }
 
     @Get(':userId')
     getUserById (@Param(new ValidationPipe()) params: GetUserDto, @Res() res: Response) {

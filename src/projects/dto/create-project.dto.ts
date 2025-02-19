@@ -26,18 +26,18 @@ export class CreateProjectDto {
     @MinLength(3,{message: 'Titulo Valido'})
     titulo: string
 
-    @IsString({message:'Status no Valido'})
+    @IsString({message:'facultad no Valida'})
     facultad: string
 
-    @IsString({message:'Status no Valido'})
-    status: string
+    @IsString({message:'estado no Valido'})
+    estado: string
 
     @IsString({message:'Etiquetas no Valido'})
     etiquetas: string
 
     @IsJSON({message:'Asignados no Validos'})
     @Validate(ArrayOfUsers)
-    asignados: string
+    asignado: string
 
     @IsString({message:'Prioridad no Valida'})
     prioridad: string
