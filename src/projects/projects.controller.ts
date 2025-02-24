@@ -15,7 +15,7 @@ export class ProjectsController {
 
   @Post('/test')
   test(@Body() test:TestDto, @Res() res: Response){
-    console.log(test)
+    
     return res.json('testing')
   }
 
