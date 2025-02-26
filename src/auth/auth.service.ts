@@ -20,8 +20,8 @@ export class AuthService {
         @InjectRepository(Users) private readonly userRepository: Repository<Users>
     ) {}
     async createUser(createUser: CreateUserDto, res: Response) {
-        const { password, name, email, admin } = createUser;
-        
+        const { password, name, email, nivel } = createUser;
+
         const emialExists = await this.userRepository.findOne({where: { email }})
         const nameExists = await this.userRepository.findOne({where: { name }})
         if(emialExists || nameExists) {
@@ -29,13 +29,23 @@ export class AuthService {
         }
         
         const hashedPw = await hash(password, 10);
+        
+        let admin: boolean = true
         let isAdmin: boolean
-        if(admin === 'true'){
-            isAdmin = admin === 'true'
+        
+        if (nivel < 4) {
+            isAdmin = admin === true
         } else {
-            isAdmin = admin === 'true'
+            isAdmin = false
         }
-        const registerUser = { name, email, password: hashedPw, admin: isAdmin }
+
+        const registerUser = { 
+            name, 
+            email, 
+            password: hashedPw, 
+            admin: isAdmin,
+            nivel
+        }
 
         this.userRepository.save(registerUser)
         return res.status(201).json('Usuario Creado!')

@@ -8,10 +8,10 @@ POST http://localhost:4000/auth/create-user
 Content-Type: application/json
 
 {
-    "name": "newUser1",
-    "email": "correo115@correo.com",
+    "name": "Dummy8",
+    "email": "dummy8@correo.com",
     "password": "Huevos2",
-    "admin": "false"
+    "nivel": "4"
 }
 
 ###
@@ -37,12 +37,15 @@ Content-Type: application/json
 
 {
     "user": 74,
-    "titulo": "proyecto test 9",
-    "facultad": "csPuras",
+    "titulo": "trabajo new testing active",
+    "asignados":"[\"usrNivel 4\", \"usrNivel 3\"]",
+    "tipoDocumento":"informe",
+    "gestor":"Juan Perez",
     "estado": "pendiente",
-    "etiquetas": "nuevo",
     "tipo": "Construccion",
-    "asignado":"[\"asignados 3\"]",
+    "citeNumero": 4321,
+    "rutaVc": 5242,
+    "oficinaOrigen": "Rectorado",
     "prioridad": "media"
 }
 

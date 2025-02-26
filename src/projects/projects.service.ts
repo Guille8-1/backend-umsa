@@ -8,20 +8,30 @@ import { Comments } from './entities/comments.entity';
 import { In, Repository } from 'typeorm';
 import { CommentProjectDto } from './dto/comments-project.dto';
 
-
 @Injectable()
 export class ProjectsService {
   constructor(
     @InjectRepository(Projects)
     private readonly projectRepository: Repository<Projects>,
     @InjectRepository(Comments)
-    private readonly commentRepository: Repository<Comments>
+    private readonly commentRepository: Repository<Comments>,
   ) {}
 
   async createProject(createProjectDto: CreateProjectDto, res: Response) {
-    const { user, titulo, facultad, estado, etiquetas, tipo,asignado, prioridad } =
-      createProjectDto;
-      console.log(createProjectDto)
+    const {
+      user,
+      titulo,
+      asignados,
+      tipoDocumento,
+      gestor,
+      estado,
+      tipo,
+      citeNumero,
+      rutaVc,
+      oficinaOrigen,
+      prioridad,
+    } = createProjectDto;
+
     const validStatus = ['pendiente', 'activo', 'en_mora'];
     if (validStatus.some((statusMatch) => estado === statusMatch)) {
       const validProject = await this.projectRepository.find({
@@ -34,21 +44,27 @@ export class ProjectsService {
       if (projecTitles.some((titleMatch) => titulo == titleMatch)) {
         return res.status(400).json('Proyecto Existente');
       }
-      const assignees = JSON.parse(asignado.split('[]')[0]);
+      const assignees = JSON.parse(asignados.split('[]')[0]);
       const projectAssigned: string[] = [];
       for (const assnee of assignees) {
         projectAssigned.push(assnee);
       }
-      this.projectRepository.save({
+      const toCreateWork = {
         user,
         titulo,
-        facultad,
-        estado,
-        etiquetas,
-        tipo,
         asignados: projectAssigned,
+        tipoDocumento,
+        gestor,
+        estado,
+        tipo,
+        citeNumero,
+        rutaVc,
+        oficinaOrigen,
         prioridad,
-      });
+        isActive: true
+      };
+      this.projectRepository.save(toCreateWork);
+
     } else {
       return res.status(400).json('Status No Valido');
     }
@@ -56,126 +72,108 @@ export class ProjectsService {
   }
 
   async createProjectComment(commentProject: CommentProjectDto, res: Response) {
-    const { comentarios, projectId } = commentProject
+    const { comentarios, projectId } = commentProject;
     await this.commentRepository.save({
       comentarios: comentarios,
-      project: projectId
-    })
-    return res.status(201).json('comentario guardado')
+      project: projectId,
+    });
+    return res.status(201).json('comentario guardado');
   }
 
   async findAllProjects(res: Response) {
     const availableProjects = await this.projectRepository.find({
       where: {
-        estado: In(['activo', 'pendiente'])
+        estado: In(['activo', 'pendiente']),
       },
-      relations:['comentarios']
-    })
+      relations: ['comentarios', 'user'],
+    });
     return res.status(201).json(availableProjects);
   }
 
   async findOneProject(id: number, res: Response) {
     const project = await this.projectRepository.findOne({
-      where: {id: id}
-    })
-    if(!project) {
+      where: { id: id },
+    });
+    if (!project) {
       return res.status(201).json('Proyecto no Encontrado');
     }
     return res.status(201).json(project);
   }
 
-  async updateProject(id: number, updateProjectDto: UpdateProjectDto, res: Response) {
-  
-    if(updateProjectDto.asignados){
-      const asignados = JSON.parse(updateProjectDto.asignados.split('[]')[0]) 
-      
+  async updateProject(
+    id: number,
+    updateProjectDto: UpdateProjectDto,
+    res: Response,
+  ) {
+    if (updateProjectDto.asignados) {
+      const asignados = JSON.parse(updateProjectDto.asignados.split('[]')[0]);
+
       await this.projectRepository
-      .createQueryBuilder()
-      .update(Projects)
-      .where("id = :id", {id:id})
-      .set(
-        {
-          asignados: asignados
-        }
-      )
-      .execute()
+        .createQueryBuilder()
+        .update(Projects)
+        .where('id = :id', { id: id })
+        .set({
+          asignados: asignados,
+        })
+        .execute();
     }
 
-    if(updateProjectDto.titulo){
+    if (updateProjectDto.titulo) {
       await this.projectRepository
-      .createQueryBuilder()
-      .update(Projects)
-      .where("id = :id", {id:id})
-      .set(
-        {
-          titulo: updateProjectDto.titulo
-        }
-      )
-      .execute()
+        .createQueryBuilder()
+        .update(Projects)
+        .where('id = :id', { id: id })
+        .set({
+          titulo: updateProjectDto.titulo,
+        })
+        .execute();
     }
 
-    if(updateProjectDto.estado){
+    if (updateProjectDto.estado) {
       await this.projectRepository
-      .createQueryBuilder()
-      .update(Projects)
-      .where("id = :id", {id:id})
-      .set(
-        {
-          estado: updateProjectDto.estado
-        }
-      )
-      .execute()
+        .createQueryBuilder()
+        .update(Projects)
+        .where('id = :id', { id: id })
+        .set({
+          estado: updateProjectDto.estado,
+        })
+        .execute();
     }
 
-    if(updateProjectDto.etiquetas){
+    if (updateProjectDto.prioridad) {
       await this.projectRepository
-      .createQueryBuilder()
-      .update(Projects)
-      .where("id = :id", {id:id})
-      .set(
-        {
-          etiquetas: updateProjectDto.etiquetas
-        }
-      )
-      .execute()
-    }
-    
-    if(updateProjectDto.prioridad){
-      await this.projectRepository
-      .createQueryBuilder()
-      .update(Projects)
-      .where("id = :id", {id:id})
-      .set(
-        {
-          prioridad: updateProjectDto.prioridad
-        }
-      )
-      .execute()
+        .createQueryBuilder()
+        .update(Projects)
+        .where('id = :id', { id: id })
+        .set({
+          prioridad: updateProjectDto.prioridad,
+        })
+        .execute();
     }
     return res.status(201).json('Cambios Guardados');
   }
 
   async removeProject(id: number, res: Response) {
     const project = await this.projectRepository.findOne({
-      where: {id: id},
-      relations:['comentarios']
-    })
+      where: { id: id },
+      relations: ['comentarios'],
+    });
 
-    if(!project){
+    if (!project) {
       return res.status(200).json(`Proyecto no Encontrado`);
     }
-    
+
     await this.projectRepository
-    .createQueryBuilder()
-    .delete()
-    .where("id = :id", {id: id})
-    .execute()
+      .createQueryBuilder()
+      .delete()
+      .where('id = :id', { id: id })
+      .execute();
 
     await this.commentRepository
-    .createQueryBuilder()
-    .delete()
-    .where("projectId IS NULL")
-    .execute()
+      .createQueryBuilder()
+      .delete()
+      .where('projectId IS NULL')
+      .execute();
 
     return res.status(201).json(`Proyecto ${project.titulo} fue eliminado`);
   }

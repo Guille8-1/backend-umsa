@@ -15,9 +15,12 @@ export class Users {
     @Column({type:'varchar', length:60})
     password: string
 
-    @Column()
+    @Column({type:'boolean'})
     admin: boolean
     
+    @Column({nullable: true})
+    nivel:number
+
     @CreateDateColumn({type: Date})
     created: Date
 

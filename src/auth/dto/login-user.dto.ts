@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer'
-import { IsEmail, IsInt, IsNotEmpty, IsString, Min, MinLength } from 'class-validator'
+import { IsEmail, IsInt, IsNotEmpty, IsEmpty, IsString, Max, Min, MinLength } from 'class-validator'
 
 export class CreateUserDto {
     @IsString({message:'Nombre no Valido'})
@@ -13,9 +13,12 @@ export class CreateUserDto {
     @IsNotEmpty({message:'Password Vacio'})
     @MinLength(5,{message: 'Password No Valido'})
     password: string
-
-    @IsString({message:'Valor Admin No Definido'})
-    admin: string
+    
+    @Type(()=> Number)
+    @IsInt()
+    @Min(1, {message: 'Nivel de Usuario no Permitido'})
+    @Max(4, {message: 'Nivel de Usuario no Permitido'})
+    nivel: number
 }
 
 export class LoginUserDto {

@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import { IsString, IsJSON, IsNumber, Validate, IsNotEmpty, MinLength } from 'class-validator';
 import { ValidatorConstraintInterface, ValidationArguments } from 'class-validator';
 import { Users } from 'src/auth/entities/users.entity';
@@ -26,22 +27,38 @@ export class CreateProjectDto {
     @MinLength(3,{message: 'Titulo Valido'})
     titulo: string
 
-    @IsString({message:'facultad no Valida'})
-    facultad: string
+    @IsJSON({message:'Asignados no Validos'})
+    @Validate(ArrayOfUsers)
+    asignados: string
+
+    @IsString({message:'Documento no Valido'})
+    @IsNotEmpty({message:'Documento no Valido'})
+    @MinLength(3,{message: 'Documento no Valido'})
+    tipoDocumento: string
+
+    @IsString({message:'Nombre no Valido'})
+    @IsNotEmpty({message:'Nombre no Valido'})
+    @MinLength(3,{message: 'Nombre no Valido'})
+    gestor: string
 
     @IsString({message:'estado no Valido'})
     estado: string
+    
+    @IsString({message:'estado no Valido'})
+    tipo: string
+    
+    @Type(()=> Number)
+    @IsNumber()
+    citeNumero: number
+    
+    @Type(()=> Number)
+    @IsNumber()
+    rutaVc: number
 
-    @IsString({message:'Etiquetas no Valido'})
-    etiquetas: string
-
-    @IsJSON({message:'Asignados no Validos'})
-    @Validate(ArrayOfUsers)
-    asignado: string
+    @IsString({message:'estado no Valido'})
+    oficinaOrigen: string
 
     @IsString({message:'Prioridad no Valida'})
     prioridad: string
 
-    @IsString({message:'Tipo no Valido'})
-    tipo: string
 }
