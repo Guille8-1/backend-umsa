@@ -14,20 +14,23 @@ export class Projects {
     @Column('text', {array: true})
     asignados: string[]
 
-    @Column({type: 'varchar', length: 20, nullable: true})
+    @Column('text', {array: true, nullable: true})
+    asignadosId: string[]
+
+    @Column({type: 'varchar', length: 100, nullable: true})
     tipoDocumento: string
 
-    @Column({type:'varchar', length:20})
+    @Column({type:'varchar', length:50, nullable: true})
     prioridad: string
 
-    @Column({type:'varchar', length:20, nullable: true})
+    @Column({type:'varchar', length:50, nullable: true})
     tipoActividad: string
 
     @Column({nullable: true})
-    citeNumero: number
+    citeNumero: string
 
     @Column({nullable: true})
-    rutaVc: number
+    rutaCv: string
 
     @Column({nullable: true})
     avance: number
@@ -39,16 +42,16 @@ export class Projects {
     @Column({type:'varchar', length:20, nullable: true})
     estado: string
 
-    @Column({type:'varchar', length:20, nullable: true})
+    @Column({type:'varchar', length:200, nullable: true})
     oficinaOrigen: string
 
     @Column({nullable: true})
     fechaAtencion: number
 
-    @Column({type:'varchar', length:20, nullable: true})
+    @Column({type:'varchar', length:40, nullable: true})
     actualUsuario: string
 
-    @Column({type:'varchar', length:20, nullable: true})
+    @Column({type:'varchar', length:40, nullable: true})
     gestor: string
 
     @Column({type:'boolean', nullable: true})

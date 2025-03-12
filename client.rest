@@ -8,10 +8,11 @@ POST http://localhost:4000/auth/create-user
 Content-Type: application/json
 
 {
-    "name": "Dummy8",
-    "email": "dummy8@correo.com",
-    "password": "Huevos2",
-    "nivel": "4"
+    "nombre": "natalia",
+    "apellido": "aramayo",
+    "email": "natalia@umsa.com",
+    "password": "huevos1",
+    "nivel": "3"
 }
 
 ###
@@ -36,17 +37,18 @@ POST http://localhost:4000/projects/create
 Content-Type: application/json
 
 {
-    "user": 74,
-    "titulo": "trabajo new testing active",
-    "asignados":"[\"usrNivel 4\", \"usrNivel 3\"]",
-    "tipoDocumento":"informe",
-    "gestor":"Juan Perez",
-    "estado": "pendiente",
-    "tipo": "Construccion",
-    "citeNumero": 4321,
-    "rutaVc": 5242,
-    "oficinaOrigen": "Rectorado",
-    "prioridad": "media"
+  "user": 97,
+  "titulo": "New Testing for assignees",
+  "tipoDocumento": "teste de tipo documento",
+  "asignadosId": [ "100", "99" ],
+  "gestor": "GuilleA",
+  "estado": "pendiente",
+  "tipo": "construccion",
+  "prioridad": "urgente",
+  "citeNumero": "1234",
+  "rutaCv": "14123",
+  "avance": "10",
+  "oficinaOrigen": "the new office"
 }
 
 //Get user with user param id
@@ -67,7 +69,7 @@ Content-Type: application/json
     "comentarios": "nuevo comentario en el testing"
 }
 
-//Get available projects
+//Get available projects searchable component
 ###
 GET http://localhost:4000/projects/available
 
@@ -99,3 +101,10 @@ Content-Type: application/json
 //get all users
 ###
 GET http://localhost:4000/auth/users
+
+
+//get admin projects
+###
+GET http://localhost:4000/projects/user/97
+
+

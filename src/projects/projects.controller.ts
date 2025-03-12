@@ -24,7 +24,7 @@ export class ProjectsController {
     return this.projectsService.createProject(createProjectDto, res);
   }
 
-  @Post('comment')
+  @Post('/comment')
   addComment(@Body() commentProject: CommentProjectDto, @Res() res: Response ){
     console.log(commentProject.comentarios)
    return this.projectsService.createProjectComment(commentProject ,res)
@@ -33,6 +33,11 @@ export class ProjectsController {
   @Get('/available')
   findAll(@Res() res: Response) {
     return this.projectsService.findAllProjects(res);
+  }
+
+  @Get('/user/:id')
+  userProjects(@Param('id') id:string, @Res() res: Response){
+    return this.projectsService.userProjects(+id, res)
   }
 
   @Get(':id')

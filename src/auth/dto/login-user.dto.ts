@@ -5,10 +5,16 @@ export class CreateUserDto {
     @IsString({message:'Nombre no Valido'})
     @IsNotEmpty({message:'Nombre no Valido'})
     @MinLength(3,{message: 'Nombre de Usuario No Valido'})
-    name: string
+    nombre: string
+
+    @IsString({message:'Nombre no Valido'})
+    @IsNotEmpty({message:'Nombre no Valido'})
+    @MinLength(3,{message: 'Nombre de Usuario No Valido'})
+    apellido: string
 
     @IsEmail({}, {message:'Email Invalido'})
     email: string
+
     @IsString({message:'Password No Valido'})
     @IsNotEmpty({message:'Password Vacio'})
     @MinLength(5,{message: 'Password No Valido'})

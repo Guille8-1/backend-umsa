@@ -5,7 +5,8 @@ import { UpdateProjectDto } from './dto/update-project.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Projects } from './entities/projects.entity';
 import { Comments } from './entities/comments.entity';
-import { In, Repository } from 'typeorm';
+import { Users } from 'src/auth/entities/users.entity';
+import { In, IsNull, Not, Repository } from 'typeorm';
 import { CommentProjectDto } from './dto/comments-project.dto';
 
 @Injectable()
@@ -15,24 +16,28 @@ export class ProjectsService {
     private readonly projectRepository: Repository<Projects>,
     @InjectRepository(Comments)
     private readonly commentRepository: Repository<Comments>,
+    @InjectRepository(Users)
+    private readonly userRepository: Repository<Users>
   ) {}
 
   async createProject(createProjectDto: CreateProjectDto, res: Response) {
     const {
       user,
       titulo,
-      asignados,
+      asignadosId,
       tipoDocumento,
       gestor,
       estado,
       tipo,
       citeNumero,
-      rutaVc,
+      rutaCv,
+      avance,
       oficinaOrigen,
       prioridad,
     } = createProjectDto;
+    
 
-    const validStatus = ['pendiente', 'activo', 'en_mora'];
+    const validStatus = ['activo', 'pendiente', 'cerrado', 'en_mora'];
     if (validStatus.some((statusMatch) => estado === statusMatch)) {
       const validProject = await this.projectRepository.find({
         where: { estado: estado },
@@ -44,25 +49,47 @@ export class ProjectsService {
       if (projecTitles.some((titleMatch) => titulo == titleMatch)) {
         return res.status(400).json('Proyecto Existente');
       }
-      const assignees = JSON.parse(asignados.split('[]')[0]);
-      const projectAssigned: string[] = [];
-      for (const assnee of assignees) {
-        projectAssigned.push(assnee);
+
+      const numberId: number[] = []
+
+      asignadosId.forEach((id)=> {
+        numberId.push(+id)
+      })
+      
+      const userNames = await this.userRepository.find({
+        where:{
+          id: In(numberId)
+        },
+        select:['nombre', 'apellido']
+      })
+      
+      const userProject: string[] = []
+
+      for(const name of userNames) {
+        const {nombre} = name
+        const {apellido} = name
+        const userToSave = `${nombre} ${apellido}`
+        userProject.push(userToSave)
       }
+      
+      
       const toCreateWork = {
         user,
         titulo,
-        asignados: projectAssigned,
+        asignados: userProject,
+        asignadosId,
         tipoDocumento,
         gestor,
         estado,
         tipo,
         citeNumero,
-        rutaVc,
+        rutaCv,
+        avance,
         oficinaOrigen,
         prioridad,
         isActive: true
       };
+      
       this.projectRepository.save(toCreateWork);
 
     } else {
@@ -83,11 +110,37 @@ export class ProjectsService {
   async findAllProjects(res: Response) {
     const availableProjects = await this.projectRepository.find({
       where: {
-        estado: In(['activo', 'pendiente']),
+        isActive: true,
       },
       relations: ['comentarios', 'user'],
+      select:{
+        user: {
+          id: true,
+          nombre: true,
+          apellido: true,
+          email: true,
+          nivel: true
+        }
+      }
     });
     return res.status(201).json(availableProjects);
+  }
+
+  async userProjects(id: number, res: Response) {
+    const userProjects = await this.projectRepository.find({
+      where: {gestor: Not(IsNull()), user:{id: id}},
+      relations: ['user','comentarios'],
+      select:{
+        user: {
+          id: true,
+          nombre: true,
+          apellido: true,
+          email: true,
+          nivel: true
+        }
+      }
+    })
+    return res.json(userProjects[0])
   }
 
   async findOneProject(id: number, res: Response) {
@@ -105,9 +158,9 @@ export class ProjectsService {
     updateProjectDto: UpdateProjectDto,
     res: Response,
   ) {
-    if (updateProjectDto.asignados) {
-      const asignados = JSON.parse(updateProjectDto.asignados.split('[]')[0]);
-
+    const asignados = updateProjectDto.asignados
+    if (asignados) {
+      
       await this.projectRepository
         .createQueryBuilder()
         .update(Projects)

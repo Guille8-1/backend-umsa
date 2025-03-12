@@ -3,7 +3,7 @@ import { Response, Request } from 'express';
 import { CreateUserDto, LoginUserDto, VerifyUserDto } from './dto/login-user.dto'
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from './entities/users.entity';
-import { Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import { hash, compare } from 'bcrypt'
 import { sign, verify } from 'jsonwebtoken'
 import 'dotenv/config'
@@ -20,29 +20,30 @@ export class AuthService {
         @InjectRepository(Users) private readonly userRepository: Repository<Users>
     ) {}
     async createUser(createUser: CreateUserDto, res: Response) {
-        const { password, name, email, nivel } = createUser;
+        const { password, nombre, email, nivel, apellido } = createUser;
 
         const emialExists = await this.userRepository.findOne({where: { email }})
-        const nameExists = await this.userRepository.findOne({where: { name }})
+        const nameExists = await this.userRepository.findOne({where: { nombre }})
         if(emialExists || nameExists) {
             return res.status(401).json('Usuario Ya Registrado')
         }
         
         const hashedPw = await hash(password, 10);
         
-        let admin: boolean = true
         let isAdmin: boolean
-        
         if (nivel < 4) {
-            isAdmin = admin === true
+            isAdmin =  true
         } else {
             isAdmin = false
         }
+        const lowerName = nombre.toLowerCase();
+        const lowerLastName = apellido.toLowerCase();
 
         const registerUser = { 
-            name, 
-            email, 
-            password: hashedPw, 
+            nombre: lowerName,
+            apellido: lowerLastName,
+            email,
+            password: hashedPw,
             admin: isAdmin,
             nivel
         }
@@ -67,7 +68,8 @@ export class AuthService {
 
         const authenticatedUser = {
             id: findUser.id,
-            name: findUser.name,
+            nombre: findUser.nombre,
+            apellido: findUser.apellido,
             admin: findUser.admin
         }
 
@@ -91,14 +93,15 @@ export class AuthService {
                 req.user = await this.userRepository.findOne({where:{id: decoded.id}})
                 res.json({
                     id:req.user.id,
-                    name: req.user.name,
+                    name: req.user.nombre,
+                    apellido: req.user.apellido,
                     admin: req.user.admin
                 })
             }
             
         } catch (error) {
             return res.status(401).json('Token No Valido o Autorizado')
-        }    
+            }    
     }
 
     async getUserById(id: number, res: Response){        
@@ -106,10 +109,18 @@ export class AuthService {
     }
 
     async getAllUsers(res: Response){
-        const allUsers = await this.userRepository
-        .createQueryBuilder()
-        .select(['name', 'email', 'admin', 'created'])
-        .execute()
+        const allUsers = await this.userRepository.find({
+            where:{
+                nombre: Not(IsNull()),
+                apellido: Not(IsNull())
+            },
+            select: {
+                nombre: true,
+                apellido: true,
+                nivel: true
+            }
+        })
+        
         
         res.status(201).json(allUsers)
     }
@@ -126,6 +137,6 @@ export class AuthService {
         .where('id = :id', {id: id})
         .execute()
 
-        res.json(`Usuario ${user.name} fue eliminado`)
+        res.json(`Usuario ${user.nombre + user.apellido} fue eliminado`)
     }
 }

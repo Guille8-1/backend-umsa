@@ -6,8 +6,11 @@ export class Users {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({type: 'varchar', length: 20})
-    name: string
+    @Column({type: 'varchar', length: 20, nullable: true})
+    nombre: string
+
+    @Column({type: 'varchar', length: 20, nullable: true})
+    apellido: string
 
     @Column({type:'varchar', length:60})
     email: string
@@ -32,5 +35,4 @@ export class Users {
         onDelete:'CASCADE'
     })
     projects: Projects[]
-
 }
