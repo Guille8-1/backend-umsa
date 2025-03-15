@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Response, Request } from 'express';
-import { CreateUserDto, LoginUserDto, VerifyUserDto } from './dto/login-user.dto'
+import { CreateUserDto, GetUserByIds, LoginUserDto } from './dto/login-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from './entities/users.entity';
 import { IsNull, Not, Repository } from 'typeorm';
@@ -31,11 +31,7 @@ export class AuthService {
         const hashedPw = await hash(password, 10);
         
         let isAdmin: boolean
-        if (nivel < 4) {
-            isAdmin =  true
-        } else {
-            isAdmin = false
-        }
+        isAdmin = nivel < 4;
         const lowerName = nombre.toLowerCase();
         const lowerLastName = apellido.toLowerCase();
 
@@ -48,7 +44,7 @@ export class AuthService {
             nivel
         }
 
-        this.userRepository.save(registerUser)
+        await this.userRepository.save(registerUser)
         return res.status(201).json('Usuario Creado!')
     }
 
@@ -105,7 +101,24 @@ export class AuthService {
     }
 
     async getUserById(id: number, res: Response){        
-        res.json(`obteniendo usuario ${id}`)
+        res.json(`obteniendo usuario ${id}`);
+    }
+
+    async getUserByIds(usersId: GetUserByIds, res: Response){
+        const { ids } = usersId;
+        const fullNames = ids.map(name => {
+            const [nombre, apellido] = name.split(' ');
+            return {nombre, apellido}
+        })
+        const responseId = await this.userRepository.find({
+            where: fullNames.map(fullName => (
+              {
+                nombre: fullName.nombre,
+                apellido: fullName.apellido
+              })),
+            select: ['id']
+        })
+        return res.status(201).json(responseId)
     }
 
     async getAllUsers(res: Response){
@@ -131,7 +144,7 @@ export class AuthService {
             relations: ['projects']
         })
 
-        this.userRepository
+        await this.userRepository
         .createQueryBuilder()
         .delete()
         .where('id = :id', {id: id})

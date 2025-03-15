@@ -1,5 +1,16 @@
 import { Type } from 'class-transformer'
-import { IsEmail, IsInt, IsNotEmpty, IsEmpty, IsString, Max, Min, MinLength } from 'class-validator'
+import {
+    IsEmail,
+    IsInt,
+    IsNotEmpty,
+    IsEmpty,
+    IsString,
+    Max,
+    Min,
+    MinLength,
+    ArrayNotEmpty,
+    IsArray,
+} from 'class-validator';
 
 export class CreateUserDto {
     @IsString({message:'Nombre no Valido'})
@@ -55,4 +66,10 @@ export class GetUserDto {
     @IsInt()
     @Min(1)
     userId: number
+}
+
+export class GetUserByIds {
+    @IsArray()
+    @ArrayNotEmpty()
+    ids: string[];
 }

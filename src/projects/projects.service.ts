@@ -140,7 +140,7 @@ export class ProjectsService {
         }
       }
     })
-    return res.json(userProjects[0])
+    return res.json(userProjects)
   }
 
   async findOneProject(id: number, res: Response) {

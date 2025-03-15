@@ -1,9 +1,7 @@
 import { Controller, Get, Post, Body, Param, Delete, Res, ValidationPipe, Req } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { AuthService } from './auth.service';
-import { CreateUserDto, DeleteUserDto, GetUserDto, LoginUserDto } from './dto/login-user.dto';
-import { Type } from 'class-transformer';
-import { IsInt, Min } from 'class-validator';
+import { CreateUserDto, DeleteUserDto, GetUserDto, LoginUserDto, GetUserByIds } from './dto/login-user.dto';
 
 
 
@@ -28,6 +26,11 @@ export class AuthController {
     @Get('/users')
     getUsers(@Res() res: Response) {
         return this.authService.getAllUsers(res)
+    }
+
+    @Post('/userids')
+    getUserId(@Body() getUsersIds: GetUserByIds, @Res() res: Response){
+        return this.authService.getUserByIds(getUsersIds ,res)
     }
 
     @Get(':userId')
