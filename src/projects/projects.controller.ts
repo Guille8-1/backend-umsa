@@ -40,6 +40,11 @@ export class ProjectsController {
     return this.projectsService.userProjects(+id, res)
   }
 
+  @Get('/assigned/:assigned')
+  assignedProject(@Param('assigned') id:string, @Res() res: Response){
+    return this.projectsService.userAssigned(+id, res)
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string, @Res() res: Response) {
     return this.projectsService.findOneProject(+id, res);

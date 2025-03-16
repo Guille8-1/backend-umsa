@@ -143,6 +143,24 @@ export class ProjectsService {
     return res.json(userProjects)
   }
 
+  async userAssigned(id:number, res: Response) {
+    console.log(id)
+    const assignedProject = await this.projectRepository.find({
+      where:{ asignadosId: In[id] || Not(IsNull())},
+      relations: ['user','comentarios'],
+      select:{
+        user:{
+          id: true,
+          nombre: true,
+          apellido: true,
+          email: true,
+          nivel: true
+        }
+      }
+    })
+    return res.status(200).json(assignedProject);
+  }
+
   async findOneProject(id: number, res: Response) {
     const project = await this.projectRepository.findOne({
       where: { id: id },

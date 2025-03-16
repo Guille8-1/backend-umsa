@@ -15,7 +15,7 @@ export class Projects {
     asignados: string[]
 
     @Column('text', {array: true, nullable: true})
-    asignadosId: string[]
+    asignadosId: number[]
 
     @Column({type: 'varchar', length: 100, nullable: true})
     tipoDocumento: string

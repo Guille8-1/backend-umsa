@@ -1,5 +1,16 @@
 import { Type } from 'class-transformer';
-import { IsString, IsJSON, IsNumber, Validate, IsNotEmpty, MinLength, IsArray, ArrayMinSize, ArrayMaxSize } from 'class-validator';
+import {
+    IsString,
+    IsJSON,
+    IsNumber,
+    Validate,
+    IsNotEmpty,
+    MinLength,
+    IsArray,
+    ArrayMinSize,
+    ArrayMaxSize,
+    IsInt,
+} from 'class-validator';
 import { ValidatorConstraintInterface, ValidationArguments } from 'class-validator';
 import { Users } from 'src/auth/entities/users.entity';
 
@@ -15,8 +26,9 @@ export class CreateProjectDto {
     @IsArray()
     @ArrayMinSize(1)
     @ArrayMaxSize(10)
-    @IsString({each: true})
-    asignadosId: string[]
+    @Type(() => Number)
+    @IsInt({each: true})
+    asignadosId: number[]
 
     @IsString({message:'Documento no Valido'})
     @IsNotEmpty({message:'Documento no Valido'})

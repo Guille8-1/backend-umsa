@@ -116,7 +116,7 @@ export class AuthService {
                 nombre: fullName.nombre,
                 apellido: fullName.apellido
               })),
-            select: ['id']
+            select: ['id', 'nombre', 'apellido'],
         })
         return res.status(201).json(responseId)
     }
