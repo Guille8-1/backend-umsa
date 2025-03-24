@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { Response } from 'express';
+import { InjectRepository } from '@nestjs/typeorm';
+import { In, IsNull, Not, Repository } from 'typeorm';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Projects } from './entities/projects.entity';
 import { Comments } from './entities/comments.entity';
 import { Users } from 'src/auth/entities/users.entity';
-import { In, IsNull, Not, Repository } from 'typeorm';
 import { CommentProjectDto } from './dto/comments-project.dto';
+import { Response } from 'express';
 
 @Injectable()
 export class ProjectsService {
@@ -90,7 +90,7 @@ export class ProjectsService {
         isActive: true
       };
       
-      this.projectRepository.save(toCreateWork);
+      await this.projectRepository.save(toCreateWork);
 
     } else {
       return res.status(400).json('Status No Valido');
@@ -144,20 +144,25 @@ export class ProjectsService {
   }
 
   async userAssigned(id:number, res: Response) {
-    console.log(id)
-    const assignedProject = await this.projectRepository.find({
-      where:{ asignadosId: In[id] || Not(IsNull())},
-      relations: ['user','comentarios'],
-      select:{
-        user:{
-          id: true,
-          nombre: true,
-          apellido: true,
-          email: true,
-          nivel: true
-        }
-      }
-    })
+    const assignedId = id
+    const assignedProject = await this.projectRepository
+      .createQueryBuilder('project')
+      .leftJoin('project.comentarios', 'comentarios')
+      .addSelect(['comentarios.id','comentarios.comentarios','comentarios.createdDate', 'comentarios.updatedDate'])
+      .leftJoin('project.user', 'user')
+      .addSelect(
+        [
+          'user.id',
+          'user.nombre',
+          'user.apellido',
+          'user.email',
+          'user.nivel'
+        ]
+      )
+      .where('project.gestor IS NOT NULL')
+      .andWhere('project.asignadosId IS NOT NULL')
+      .andWhere(':assignedId = Any(project.asignadosId)', { assignedId })
+      .getMany()
     return res.status(200).json(assignedProject);
   }
 
@@ -247,5 +252,13 @@ export class ProjectsService {
       .execute();
 
     return res.status(201).json(`Proyecto ${project.titulo} fue eliminado`);
+  }
+
+  async testingDates(res: Response) {
+    const date = new Date().toLocaleString('lp-BO',{
+      timeZone:'America/La_Paz'
+    });
+    console.log(date)
+    return res.status(201).json('desde dates');
   }
 }

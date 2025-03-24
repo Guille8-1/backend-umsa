@@ -1,6 +1,6 @@
 ###
 //ROOT dir request endpoint
-GET http://localhost:4000/
+GET http://localhost:4000/hello
 
 ###
 //Create User endpoint
@@ -105,10 +105,10 @@ GET http://localhost:4000/auth/users
 
 //get admin projects
 ###
-GET http://localhost:4000/projects/user/100
+GET http://localhost:4000/projects/user/97
 //Get assigned projects
 ###
-GET http://localhost:4000/projects/assigned/100
+GET http://localhost:4000/projects/assigned/97
 //get users ids
 ###
 POST http://localhost:4000/auth/userids
@@ -117,3 +117,6 @@ Content-Type: application/json
 {
    "ids": [ "marco garay", "natalia aramayo" ]
 }
+
+###
+GET http://localhost:4000/projects/dates

@@ -14,7 +14,7 @@ export class Projects {
     @Column('text', {array: true})
     asignados: string[]
 
-    @Column('text', {array: true, nullable: true})
+    @Column('int', {array: true, nullable: true})
     asignadosId: number[]
 
     @Column({type: 'varchar', length: 100, nullable: true})

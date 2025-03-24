@@ -12,6 +12,12 @@ export class ProjectsController {
   constructor(
     private readonly projectsService: ProjectsService
   ) {}
+  //testing dates update database intearctive
+
+  @Get('/dates')
+  updatingDates(@Res() res: Response) {
+    return this.projectsService.testingDates(res)
+  }
 
   @Post('/test')
   test(@Body() test:TestDto, @Res() res: Response){

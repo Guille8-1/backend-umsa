@@ -9,6 +9,10 @@ import { typeOrmConfig } from './config/typeorm.config';
 import { ProjectsModule } from './projects/projects.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { FileModule } from './uploads/file/file.module';
+import { CronjobsServices } from './cronjobs/cronjobs.service';
+import { ScheduleModule } from '@nestjs/schedule';
+import { Projects } from './projects/entities/projects.entity';
+
 
 
 @Module({
@@ -27,10 +31,12 @@ import { FileModule } from './uploads/file/file.module';
     }),
     AuthModule,
     ProjectsModule,
-    FileModule
+    FileModule,
+    ScheduleModule.forRoot(),
+    TypeOrmModule.forFeature([Projects])
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, CronjobsServices],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer){
