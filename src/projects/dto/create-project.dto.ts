@@ -54,6 +54,10 @@ export class CreateProjectDto {
 
     @Type(()=> Number)
     @IsNumber()
+    diasActivo: number
+
+    @Type(()=> Number)
+    @IsNumber()
     avance: number
 
     @IsString({message:'estado no Valido'})

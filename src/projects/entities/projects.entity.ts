@@ -67,7 +67,7 @@ export class Projects {
         cascade: true,
         onDelete: 'CASCADE'
     })
-    comentarios: string
+    comentarios: Comments
 
     @CreateDateColumn({
         type: 'timestamptz', 

@@ -7,13 +7,16 @@ export class Comments {
     id: number
 
     @Column({type:'varchar'})
-    comentarios: string
+    comentario: string
 
     @ManyToOne(()=> Projects, (projects) => projects.comentarios,{
         nullable: true,
         onDelete: 'SET NULL'
     })
     project: number
+
+    @Column({ type:'varchar', nullable:true })
+    author: string
 
     @CreateDateColumn({
         type: 'timestamptz',

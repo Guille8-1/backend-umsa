@@ -1,13 +1,17 @@
 import { Type } from 'class-transformer'
-import { IsString, IsNotEmpty, MinLength, Min, IsInt } from 'class-validator'
+import { IsString, IsNotEmpty, MinLength, Min, IsInt, IsEmail } from 'class-validator';
 
 
 export class CommentProjectDto {
-    @IsString()
-    comentarios: string
-
     @Type( () => Number )
     @IsInt()
     @Min(1)
     projectId: number
+
+    @IsEmail()
+    @IsNotEmpty()
+    author: string
+
+    @IsString()
+    comentarios: string
 }

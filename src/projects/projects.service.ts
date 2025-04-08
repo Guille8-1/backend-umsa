@@ -31,6 +31,7 @@ export class ProjectsService {
       tipo,
       citeNumero,
       rutaCv,
+      diasActivo,
       avance,
       oficinaOrigen,
       prioridad,
@@ -84,6 +85,7 @@ export class ProjectsService {
         tipo,
         citeNumero,
         rutaCv,
+        diasActivo,
         avance,
         oficinaOrigen,
         prioridad,
@@ -99,10 +101,11 @@ export class ProjectsService {
   }
 
   async createProjectComment(commentProject: CommentProjectDto, res: Response) {
-    const { comentarios, projectId } = commentProject;
+    const { comentarios, projectId, author } = commentProject;
     await this.commentRepository.save({
       comentarios: comentarios,
       project: projectId,
+      author: author
     });
     return res.status(201).json('comentario guardado');
   }
@@ -130,17 +133,24 @@ export class ProjectsService {
     const userProjects = await this.projectRepository.find({
       where: {gestor: Not(IsNull()), user:{id: id}},
       relations: ['user','comentarios'],
-      select:{
+      select: {
         user: {
           id: true,
           nombre: true,
           apellido: true,
           email: true,
           nivel: true
+        },
+        comentarios: {
+          id: true,
+          comentario: true,
+          author: true,
+          createdDate: true,
+          updatedDate: true,
         }
       }
     })
-    return res.json(userProjects)
+    return res.json(userProjects);
   }
 
   async userAssigned(id:number, res: Response) {
@@ -148,7 +158,13 @@ export class ProjectsService {
     const assignedProject = await this.projectRepository
       .createQueryBuilder('project')
       .leftJoin('project.comentarios', 'comentarios')
-      .addSelect(['comentarios.id','comentarios.comentarios','comentarios.createdDate', 'comentarios.updatedDate'])
+      .addSelect([
+        'comentarios.id',
+        'comentarios.comentario',
+        'comentarios.author',
+        'comentarios.createdDate',
+        'comentarios.updatedDate'
+      ])
       .leftJoin('project.user', 'user')
       .addSelect(
         [
