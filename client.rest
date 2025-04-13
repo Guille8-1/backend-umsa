@@ -65,9 +65,9 @@ POST http://localhost:4000/projects/comment
 Content-Type: application/json
 
 {
-    "projectId": 2,
-    "author": "marcogaray662@gmail.com",
-    "comentarios": "nuevo comentario new testing"
+    "projectId": 57,
+    "author": "negrito sandunguero",
+    "comentario": "nuevo comentario new testing para el fetching de datos"
 }
 
 ###
@@ -106,7 +106,7 @@ GET http://localhost:4000/auth/users
 
 //get admin projects
 ###
-GET http://localhost:4000/projects/user/8
+GET http://localhost:4000/projects/user/97
 //Get assigned projects
 ###
 GET http://localhost:4000/projects/assigned/8

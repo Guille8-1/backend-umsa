@@ -6,7 +6,7 @@ export class Comments {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({type:'varchar'})
+    @Column({type:'varchar', nullable: true})
     comentario: string
 
     @ManyToOne(()=> Projects, (projects) => projects.comentarios,{

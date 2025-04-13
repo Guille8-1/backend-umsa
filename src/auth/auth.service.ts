@@ -90,7 +90,7 @@ export class AuthService {
                 res.json({
                     id:req.user.id,
                     name: req.user.nombre,
-                    apellido: req.user.apellido,
+                    lastName: req.user.apellido,
                     admin: req.user.admin
                 })
             }

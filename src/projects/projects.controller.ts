@@ -32,7 +32,6 @@ export class ProjectsController {
 
   @Post('/comment')
   addComment(@Body() commentProject: CommentProjectDto, @Res() res: Response ){
-    console.log(commentProject.comentarios)
    return this.projectsService.createProjectComment(commentProject ,res)
   }
 

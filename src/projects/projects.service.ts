@@ -101,10 +101,10 @@ export class ProjectsService {
   }
 
   async createProjectComment(commentProject: CommentProjectDto, res: Response) {
-    const { comentarios, projectId, author } = commentProject;
+    const { comentario, projectId, author } = commentProject;
     await this.commentRepository.save({
-      comentarios: comentarios,
       project: projectId,
+      comentario: comentario,
       author: author
     });
     return res.status(201).json('comentario guardado');
