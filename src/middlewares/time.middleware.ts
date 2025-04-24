@@ -11,3 +11,10 @@ export class TimeMiddleWare implements NestMiddleware{
         next();
     }
 }
+
+@Injectable()
+export class BearerTokenVerify implements NestMiddleware{
+    use(req: Request, res: Response, next: NextFunction) {
+
+    }
+}

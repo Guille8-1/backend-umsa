@@ -35,6 +35,11 @@ export class ProjectsController {
    return this.projectsService.createProjectComment(commentProject ,res)
   }
 
+  @Get('/comment/project/:id')
+  gettingCommentProject(@Param('id') id:string, @Res() res:Response){
+    return this.projectsService.gettingProjectComment(+id, res)
+  }
+
   @Get('/available')
   findAll(@Res() res: Response) {
     return this.projectsService.findAllProjects(res);

@@ -107,7 +107,28 @@ export class ProjectsService {
       comentario: comentario,
       author: author
     });
-    return res.status(201).json('comentario guardado');
+    res.status(201).json('Comentario Guardado!');
+
+    // const projectComments = await this.commentRepository
+    //   .createQueryBuilder('comments')
+    //   .where('comments.projectId = :projectId', { projectId: projectId })
+    //   .getMany();
+    //
+    // return res.status(201).json(
+    //   {
+    //     commentsContent: projectComments,
+    //     success: 'Comentario Creado!',
+    //   }
+    // );
+
+  }
+
+  async gettingProjectComment(id: number, res: Response) {
+      const projectComments = await this.commentRepository
+        .createQueryBuilder('comments')
+        .where('comments.projectId = :projectId', { projectId: id })
+        .getMany()
+      return res.status(201).json(projectComments);
   }
 
   async findAllProjects(res: Response) {
@@ -140,20 +161,13 @@ export class ProjectsService {
           apellido: true,
           email: true,
           nivel: true
-        },
-        comentarios: {
-          id: true,
-          comentario: true,
-          author: true,
-          createdDate: true,
-          updatedDate: true,
         }
       }
     })
     return res.json(userProjects);
   }
 
-  async userAssigned(id:number, res: Response) {
+  async userAssigned(id: number, res: Response) {
     const assignedId = id
     const assignedProject = await this.projectRepository
       .createQueryBuilder('project')
@@ -274,7 +288,6 @@ export class ProjectsService {
     const date = new Date().toLocaleString('lp-BO',{
       timeZone:'America/La_Paz'
     });
-    console.log(date)
     return res.status(201).json('desde dates');
   }
 }
