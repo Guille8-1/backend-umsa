@@ -1,21 +1,41 @@
 import { Type } from 'class-transformer'
-import { IsEmail, IsInt, IsNotEmpty, IsString, Min, MinLength } from 'class-validator'
+import {
+    IsEmail,
+    IsInt,
+    IsNotEmpty,
+    IsEmpty,
+    IsString,
+    Max,
+    Min,
+    MinLength,
+    ArrayNotEmpty,
+    IsArray,
+} from 'class-validator';
 
 export class CreateUserDto {
     @IsString({message:'Nombre no Valido'})
     @IsNotEmpty({message:'Nombre no Valido'})
     @MinLength(3,{message: 'Nombre de Usuario No Valido'})
-    name: string
+    nombre: string
+
+    @IsString({message:'Nombre no Valido'})
+    @IsNotEmpty({message:'Nombre no Valido'})
+    @MinLength(3,{message: 'Nombre de Usuario No Valido'})
+    apellido: string
 
     @IsEmail({}, {message:'Email Invalido'})
     email: string
+
     @IsString({message:'Password No Valido'})
     @IsNotEmpty({message:'Password Vacio'})
     @MinLength(5,{message: 'Password No Valido'})
     password: string
-
-    @IsString({message:'Valor Admin No Definido'})
-    admin: string
+    
+    @Type(()=> Number)
+    @IsInt()
+    @Min(1, {message: 'Nivel de Usuario no Permitido'})
+    @Max(4, {message: 'Nivel de Usuario no Permitido'})
+    nivel: number
 }
 
 export class LoginUserDto {
@@ -46,4 +66,10 @@ export class GetUserDto {
     @IsInt()
     @Min(1)
     userId: number
+}
+
+export class GetUserByIds {
+    @IsArray()
+    @ArrayNotEmpty()
+    ids: string[];
 }

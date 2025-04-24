@@ -1,6 +1,6 @@
 ###
 //ROOT dir request endpoint
-GET http://localhost:4000/
+GET http://localhost:4000/hello
 
 ###
 //Create User endpoint
@@ -8,10 +8,11 @@ POST http://localhost:4000/auth/create-user
 Content-Type: application/json
 
 {
-    "name": "newUser1",
-    "email": "correo115@correo.com",
-    "password": "Huevos2",
-    "admin": "false"
+    "nombre": "marco",
+    "apellido": "garay",
+    "email": "marcogaray662@gmail.com",
+    "password": "huevos1",
+    "nivel": "1"
 }
 
 ###
@@ -24,48 +25,58 @@ Content-Type: application/json
     "password": "Huevos1"
 }
 
-//validate token
 ###
+//validate token
 GET http://localhost:4000/auth/user-token
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwibmFtZSI6Ik1hcmNvIEdhcmF5IiwiYWRtaW4iOnRydWUsImlhdCI6MTczNzE3MTA5Nn0.5HDiiX6JXQ2_PRA02pbAB6DHKMOTZeUVyRluRhFNLs8
 
-//Create Project
 ###
+//Create Project
 POST http://localhost:4000/projects/create
 Content-Type: application/json
 
 {
-    "user": 74,
-    "titulo": "proyecto test 9",
-    "facultad": "csPuras",
-    "estado": "pendiente",
-    "etiquetas": "nuevo",
-    "tipo": "Construccion",
-    "asignado":"[\"asignados 3\"]",
-    "prioridad": "media"
+  "user": 97,
+  "titulo": "New Testing for assignees",
+  "tipoDocumento": "teste de tipo documento",
+  "asignadosId": [ 100, 99 ],
+  "gestor": "GuilleA",
+  "estado": "pendiente",
+  "tipo": "construccion",
+  "prioridad": "urgente",
+  "citeNumero": "1234",
+  "rutaCv": "14123",
+  "avance": "10",
+  "oficinaOrigen": "the new office"
 }
 
-//Get user with user param id
 ###
+//Get user with user param id
 GET http://localhost:4000/auth/74
 
 //Delete user with user param id
 ###
 DELETE http://localhost:4000/auth/38
 
-//Create Comments to a project
 ###
+//Create Comments to a project
 POST http://localhost:4000/projects/comment
 Content-Type: application/json
 
 {
-    "projectId":19,
-    "comentarios": "nuevo comentario en el testing"
+    "projectId": 57,
+    "author": "negrito sandunguero",
+    "comentario": "nuevo comentario new testing para el fetching de datos"
 }
 
-//Get available projects
 ###
+//Getting project comments
+GET http://localhost:4000/projects/comment/project/56
+
+
+###
+//Get available projects searchable component
 GET http://localhost:4000/projects/available
 
 //Get project by param id
@@ -82,17 +93,35 @@ Content-Type: application/json
     "asignados": "[\"asignados4\",\"asignados5\"]"
 }
 
+###
 //Delete project with param id
-###
 DELETE http://localhost:4000/projects/16
-
 ###
+
 POST http://localhost:4000/projects/test
 Content-Type: application/json
 
 {
     "test":"1"
 }
-//get all users
 ###
+//get all users
 GET http://localhost:4000/auth/users
+
+//get admin projects
+###
+GET http://localhost:4000/projects/user/97
+//Get assigned projects
+###
+GET http://localhost:4000/projects/assigned/100
+//get users ids
+###
+POST http://localhost:4000/auth/userids
+Content-Type: application/json
+
+{
+   "ids": [ "marco garay", "natalia aramayo" ]
+}
+
+###
+GET http://localhost:4000/projects/dates

@@ -6,14 +6,17 @@ export class Comments {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({type:'varchar'})
-    comentarios: string
+    @Column({type:'varchar', nullable: true})
+    comentario: string
 
     @ManyToOne(()=> Projects, (projects) => projects.comentarios,{
         nullable: true,
         onDelete: 'SET NULL'
     })
     project: number
+
+    @Column({ type:'varchar', nullable:true })
+    author: string
 
     @CreateDateColumn({
         type: 'timestamptz',

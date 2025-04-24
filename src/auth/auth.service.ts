@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Response, Request } from 'express';
-import { CreateUserDto, LoginUserDto, VerifyUserDto } from './dto/login-user.dto'
+import { CreateUserDto, GetUserByIds, LoginUserDto } from './dto/login-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from './entities/users.entity';
-import { Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import { hash, compare } from 'bcrypt'
 import { sign, verify } from 'jsonwebtoken'
 import 'dotenv/config'
@@ -20,24 +20,31 @@ export class AuthService {
         @InjectRepository(Users) private readonly userRepository: Repository<Users>
     ) {}
     async createUser(createUser: CreateUserDto, res: Response) {
-        const { password, name, email, admin } = createUser;
-        
+        const { password, nombre, email, nivel, apellido } = createUser;
+
         const emialExists = await this.userRepository.findOne({where: { email }})
-        const nameExists = await this.userRepository.findOne({where: { name }})
+        const nameExists = await this.userRepository.findOne({where: { nombre }})
         if(emialExists || nameExists) {
             return res.status(401).json('Usuario Ya Registrado')
         }
         
         const hashedPw = await hash(password, 10);
+        
         let isAdmin: boolean
-        if(admin === 'true'){
-            isAdmin = admin === 'true'
-        } else {
-            isAdmin = admin === 'true'
-        }
-        const registerUser = { name, email, password: hashedPw, admin: isAdmin }
+        isAdmin = nivel < 4;
+        const lowerName = nombre.toLowerCase();
+        const lowerLastName = apellido.toLowerCase();
 
-        this.userRepository.save(registerUser)
+        const registerUser = { 
+            nombre: lowerName,
+            apellido: lowerLastName,
+            email,
+            password: hashedPw,
+            admin: isAdmin,
+            nivel
+        }
+
+        await this.userRepository.save(registerUser)
         return res.status(201).json('Usuario Creado!')
     }
 
@@ -57,7 +64,8 @@ export class AuthService {
 
         const authenticatedUser = {
             id: findUser.id,
-            name: findUser.name,
+            nombre: findUser.nombre,
+            apellido: findUser.apellido,
             admin: findUser.admin
         }
 
@@ -81,25 +89,51 @@ export class AuthService {
                 req.user = await this.userRepository.findOne({where:{id: decoded.id}})
                 res.json({
                     id:req.user.id,
-                    name: req.user.name,
+                    name: req.user.nombre,
+                    lastName: req.user.apellido,
                     admin: req.user.admin
                 })
             }
             
         } catch (error) {
             return res.status(401).json('Token No Valido o Autorizado')
-        }    
+            }    
     }
 
     async getUserById(id: number, res: Response){        
-        res.json(`obteniendo usuario ${id}`)
+        res.json(`obteniendo usuario ${id}`);
+    }
+
+    async getUserByIds(usersId: GetUserByIds, res: Response){
+        const { ids } = usersId;
+        const fullNames = ids.map(name => {
+            const [nombre, apellido] = name.split(' ');
+            return {nombre, apellido}
+        })
+        const responseId = await this.userRepository.find({
+            where: fullNames.map(fullName => (
+              {
+                nombre: fullName.nombre,
+                apellido: fullName.apellido
+              })),
+            select: ['id', 'nombre', 'apellido'],
+        })
+        return res.status(201).json(responseId)
     }
 
     async getAllUsers(res: Response){
-        const allUsers = await this.userRepository
-        .createQueryBuilder()
-        .select(['name', 'email', 'admin', 'created'])
-        .execute()
+        const allUsers = await this.userRepository.find({
+            where:{
+                nombre: Not(IsNull()),
+                apellido: Not(IsNull())
+            },
+            select: {
+                nombre: true,
+                apellido: true,
+                nivel: true
+            }
+        })
+        
         
         res.status(201).json(allUsers)
     }
@@ -110,12 +144,12 @@ export class AuthService {
             relations: ['projects']
         })
 
-        this.userRepository
+        await this.userRepository
         .createQueryBuilder()
         .delete()
         .where('id = :id', {id: id})
         .execute()
 
-        res.json(`Usuario ${user.name} fue eliminado`)
+        res.json(`Usuario ${user.nombre + user.apellido} fue eliminado`)
     }
 }

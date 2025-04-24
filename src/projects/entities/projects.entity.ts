@@ -11,24 +11,52 @@ export class Projects {
     @Column({type:'varchar', length:100})
     titulo: string
 
-    @Column({type:'varchar', length:20, nullable: true})
-    facultad: string
-
-    @Column({type:'varchar', length:20})
-    estado: string
-
-    @Column({type:'varchar', length:20})
-    etiquetas: string
-
     @Column('text', {array: true})
     asignados: string[]
 
-    @Column({type:'varchar', length:20})
+    @Column('int', {array: true, nullable: true})
+    asignadosId: number[]
+
+    @Column({type: 'varchar', length: 100, nullable: true})
+    tipoDocumento: string
+
+    @Column({type:'varchar', length:50, nullable: true})
     prioridad: string
 
-    @Column({type:'varchar', length:20, nullable: true})
-    tipo: string
+    @Column({type:'varchar', length:50, nullable: true})
+    tipoActividad: string
+
+    @Column({nullable: true})
+    citeNumero: string
+
+    @Column({nullable: true})
+    rutaCv: string
+
+    @Column({nullable: true})
+    avance: number
+
+    //se va a actulaizar solo en el momento de generacion del reporte
+    @Column({nullable: true})
+    diasActivo: number
     
+    @Column({type:'varchar', length:20, nullable: true})
+    estado: string
+
+    @Column({type:'varchar', length:200, nullable: true})
+    oficinaOrigen: string
+
+    @Column({nullable: true})
+    fechaAtencion: number
+
+    @Column({type:'varchar', length:40, nullable: true})
+    actualUsuario: string
+
+    @Column({type:'varchar', length:40, nullable: true})
+    gestor: string
+
+    @Column({type:'boolean', nullable: true})
+    isActive: boolean
+
     @ManyToOne(() => Users, (users) => users.projects, {
         nullable: true,
         onDelete: 'SET NULL'
@@ -39,7 +67,7 @@ export class Projects {
         cascade: true,
         onDelete: 'CASCADE'
     })
-    comentarios: string
+    comentarios: Comments
 
     @CreateDateColumn({
         type: 'timestamptz', 

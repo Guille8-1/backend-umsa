@@ -1,6 +1,6 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateProjectDto } from './create-project.dto';
-import { IsInt, IsJSON, IsNotEmpty, IsOptional, IsString, Min, MinLength, Validate, ValidationArguments, ValidatorConstraintInterface } from 'class-validator';
+import { ArrayMaxSize, ArrayMinSize, IsArray, IsInt, IsJSON, IsNotEmpty, IsNumber, IsOptional, IsString, Min, MinLength, Validate, ValidationArguments, ValidatorConstraintInterface } from 'class-validator';
 import { Type } from 'class-transformer';
 
 class ArrayOfUsers implements ValidatorConstraintInterface {
@@ -30,9 +30,11 @@ export class UpdateProjectDto extends PartialType(CreateProjectDto) {
     @IsString({message:'Etiquetas no Valido'})
     etiquetas: string
 
-    @IsJSON({message:'Asignados no Validos'})
-    @Validate(ArrayOfUsers)
-    asignados: string
+    @IsArray()
+    @ArrayMinSize(1)
+    @ArrayMaxSize(10)
+    @IsNumber()
+    asignados: string[]
 
     @IsString({message:'Prioridad no Valida'})
     prioridad: string

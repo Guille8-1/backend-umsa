@@ -12,10 +12,16 @@ export class ProjectsController {
   constructor(
     private readonly projectsService: ProjectsService
   ) {}
+  //testing dates update database intearctive
+
+  @Get('/dates')
+  updatingDates(@Res() res: Response) {
+    return this.projectsService.testingDates(res)
+  }
 
   @Post('/test')
   test(@Body() test:TestDto, @Res() res: Response){
-    console.log(test)
+    
     return res.json('testing')
   }
 
@@ -24,15 +30,29 @@ export class ProjectsController {
     return this.projectsService.createProject(createProjectDto, res);
   }
 
-  @Post('comment')
+  @Post('/comment')
   addComment(@Body() commentProject: CommentProjectDto, @Res() res: Response ){
-    console.log(commentProject.comentarios)
    return this.projectsService.createProjectComment(commentProject ,res)
+  }
+
+  @Get('/comment/project/:id')
+  gettingCommentProject(@Param('id') id:string, @Res() res:Response){
+    return this.projectsService.gettingProjectComment(+id, res)
   }
 
   @Get('/available')
   findAll(@Res() res: Response) {
     return this.projectsService.findAllProjects(res);
+  }
+
+  @Get('/user/:id')
+  userProjects(@Param('id') id:string, @Res() res: Response){
+    return this.projectsService.userProjects(+id, res)
+  }
+
+  @Get('/assigned/:assigned')
+  assignedProject(@Param('assigned') id:string, @Res() res: Response){
+    return this.projectsService.userAssigned(+id, res)
   }
 
   @Get(':id')

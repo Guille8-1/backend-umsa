@@ -4,7 +4,7 @@ import 'dotenv/config'
 import { join } from 'path';
 
 export const typeOrmConfig = (configService: ConfigService): TypeOrmModuleOptions => ({
-    type:'postgres',
+    type: 'postgres',
     host: configService.get('DB_HOST'),
     port: configService.get('DB_PORT'),
     password: configService.get('DB_PASS'),
@@ -14,3 +14,6 @@ export const typeOrmConfig = (configService: ConfigService): TypeOrmModuleOption
     entities: [join(__dirname + '../../**/*.entity.{js, ts}')],
     synchronize: true
 })
+
+
+
