@@ -12,6 +12,7 @@ import { FileModule } from './uploads/file/file.module';
 import { CronjobsServices } from './cronjobs/cronjobs.service';
 import { ScheduleModule } from '@nestjs/schedule';
 import { Projects } from './projects/entities/projects.entity';
+import { ActivitiesModule } from './activities/activities.module';
 
 
 
@@ -33,7 +34,8 @@ import { Projects } from './projects/entities/projects.entity';
     ProjectsModule,
     FileModule,
     ScheduleModule.forRoot(),
-    TypeOrmModule.forFeature([Projects])
+    TypeOrmModule.forFeature([Projects]),
+    ActivitiesModule
   ],
   controllers: [AppController],
   providers: [AppService, CronjobsServices],
