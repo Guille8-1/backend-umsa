@@ -125,3 +125,27 @@ Content-Type: application/json
 
 ###
 GET http://localhost:4000/projects/dates
+
+//ACTIVIDADES CRUD
+
+
+//Crear una actividad endPoint
+###
+POST http://localhost:4000/actividades/crear
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
