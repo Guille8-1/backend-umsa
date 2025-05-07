@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer'
+import { Type } from 'class-transformer';
 import {
   IsString,
   IsJSON,
@@ -10,48 +10,61 @@ import {
   ArrayMinSize,
   ArrayMaxSize,
   IsInt,
+  Min,
 } from 'class-validator';
-import { Users } from '../../auth/entities/users.entity'
-
+import { Users } from '../../auth/entities/users.entity';
 
 export class CreateActividadeDto {
   @IsNumber()
   id: Users;
 
-  @IsString({message:'Titulo no Valido'})
-  @IsNotEmpty({message:'Titulo no Valido'})
-  @MinLength(3,{message: 'Titulo Valido'})
+  @IsString({ message: 'Titulo no Valido' })
+  @IsNotEmpty({ message: 'Titulo no Valido' })
+  @MinLength(3, { message: 'Titulo Valido' })
   tituloActividad: string;
 
   @IsArray()
   @ArrayMinSize(1)
   @ArrayMaxSize(10)
   @Type(() => Number)
-  @IsInt({each: true})
-  asignadosActividadId: number[]
+  @IsInt({ each: true })
+  asignadosActividadId: number[];
 
-  @IsString({message:'Nombre no Valido'})
-  @IsNotEmpty({message:'Nombre no Valido'})
-  @MinLength(3,{message: 'Nombre no Valido'})
-  gestorActividad: string
+  @IsString({ message: 'Nombre no Valido' })
+  @IsNotEmpty({ message: 'Nombre no Valido' })
+  @MinLength(3, { message: 'Nombre no Valido' })
+  gestorActividad: string;
 
-  @IsString({message:'estado no Valido'})
-  estadoActividad: string
+  @IsString({ message: 'estado no Valido' })
+  estadoActividad: string;
 
-  @IsString({message:'estado no Valido'})
-  tipoActividad: string
+  @IsString({ message: 'estado no Valido' })
+  tipoActividad: string;
 
-  @IsString({message:'Oficina no Valida'})
-  oficinaOrigenActividad: string
+  @IsString({ message: 'Oficina no Valida' })
+  oficinaOrigenActividad: string;
 
-  @IsString({message:'Prioridad no Valida'})
-  prioridadActividad: string
+  @IsString({ message: 'Prioridad no Valida' })
+  prioridadActividad: string;
 
-  @Type(()=> Number)
+  @Type(() => Number)
   @IsNumber()
-  diasActivoActividad: number
+  diasActivoActividad: number;
 
-  @Type(()=> Number)
+  @Type(() => Number)
   @IsNumber()
-  avanceActividad: number
+  avanceActividad: number;
+}
+
+export class CreateCommentActivityDto {
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  activityId: number;
+
+  @IsNotEmpty()
+  author: string;
+
+  @IsString()
+  actComentario: string;
 }
