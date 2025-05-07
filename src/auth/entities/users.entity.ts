@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, OneToMany } from 'typeorm'
 import { Projects } from '../../projects/entities/projects.entity'
+import { Activities } from '../../actividades/entities/actividade.entity'
 
 @Entity()
 export class Users {
@@ -35,4 +36,10 @@ export class Users {
         onDelete:'CASCADE'
     })
     projects: Projects[]
+
+    @OneToMany( () => Activities, (actividades) => actividades.user,{
+        cascade: true,
+        onDelete: 'CASCADE'
+    })
+    actividades: Activities[]
 }
