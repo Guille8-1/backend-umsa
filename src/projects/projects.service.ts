@@ -67,8 +67,7 @@ export class ProjectsService {
       const userProject: string[] = []
 
       for(const name of userNames) {
-        const {nombre} = name
-        const {apellido} = name
+        const {nombre, apellido} = name
         const userToSave = `${nombre} ${apellido}`
         userProject.push(userToSave)
       }
@@ -135,6 +134,7 @@ export class ProjectsService {
     const availableProjects = await this.projectRepository.find({
       where: {
         isActive: true,
+        titulo: Not(IsNull())
       },
       relations: ['comentarios', 'user'],
       select:{
@@ -152,7 +152,11 @@ export class ProjectsService {
 
   async userProjects(id: number, res: Response) {
     const userProjects = await this.projectRepository.find({
-      where: {gestor: Not(IsNull()), user:{id: id}},
+      where: {
+        titulo: Not(IsNull()),
+        gestor: Not(IsNull()),
+        user:{id: id}
+      },
       relations: ['user','comentarios'],
       select: {
         user: {
@@ -191,6 +195,7 @@ export class ProjectsService {
       )
       .where('project.gestor IS NOT NULL')
       .andWhere('project.asignadosId IS NOT NULL')
+      .andWhere('project.titulo IS NOT NULL')
       .andWhere(':assignedId = Any(project.asignadosId)', { assignedId })
       .getMany()
     return res.status(200).json(assignedProject);

@@ -1,18 +1,18 @@
 import { Module, MiddlewareConsumer } from '@nestjs/common';
+import { typeOrmConfig } from './config/typeorm.config';
 import { TimeMiddleWare } from './middlewares/time.middleware';
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { typeOrmConfig } from './config/typeorm.config';
 import { ProjectsModule } from './projects/projects.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { FileModule } from './uploads/file/file.module';
 import { CronjobsServices } from './cronjobs/cronjobs.service';
 import { ScheduleModule } from '@nestjs/schedule';
 import { Projects } from './projects/entities/projects.entity';
-import { ActivitiesModule } from './activities/activities.module';
+import { ActividadesModule } from './actividades/actividades.module';
 
 
 
@@ -35,7 +35,7 @@ import { ActivitiesModule } from './activities/activities.module';
     FileModule,
     ScheduleModule.forRoot(),
     TypeOrmModule.forFeature([Projects]),
-    ActivitiesModule
+    ActividadesModule,
   ],
   controllers: [AppController],
   providers: [AppService, CronjobsServices],
