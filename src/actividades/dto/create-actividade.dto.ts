@@ -16,7 +16,7 @@ import { Users } from '../../auth/entities/users.entity';
 
 export class CreateActividadeDto {
   @IsNumber()
-  id: Users;
+  user: Users;
 
   @IsString({ message: 'Titulo no Valido' })
   @IsNotEmpty({ message: 'Titulo no Valido' })
@@ -46,21 +46,13 @@ export class CreateActividadeDto {
 
   @IsString({ message: 'Prioridad no Valida' })
   prioridadActividad: string;
-
-  @Type(() => Number)
-  @IsNumber()
-  diasActivoActividad: number;
-
-  @Type(() => Number)
-  @IsNumber()
-  avanceActividad: number;
 }
 
 export class CreateCommentActivityDto {
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  activityId: number;
+  activity: number;
 
   @IsNotEmpty()
   author: string;

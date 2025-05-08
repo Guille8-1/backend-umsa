@@ -10,7 +10,6 @@ import {
   CreateActividadeDto,
   CreateCommentActivityDto,
 } from './dto/create-actividade.dto';
-import { Action } from 'rxjs/internal/scheduler/Action';
 
 @Injectable()
 export class ActividadesService {
@@ -29,7 +28,7 @@ export class ActividadesService {
   ) {
     console.log(createActividadeDto);
     const {
-      id,
+      user,
       tituloActividad,
       asignadosActividadId,
       gestorActividad,
@@ -37,8 +36,6 @@ export class ActividadesService {
       tipoActividad,
       oficinaOrigenActividad,
       prioridadActividad,
-      diasActivoActividad,
-      avanceActividad,
     } = createActividadeDto;
     const validateStatus = ['activo', 'pendiente'];
     if (validateStatus.some((validStatus) => estadoActividad === validStatus)) {
@@ -74,7 +71,7 @@ export class ActividadesService {
       }
 
       const toCreateActivity = {
-        id,
+        user,
         tituloActividad,
         asignadosActividad: usrActivity,
         asignadosActividadId,
@@ -83,8 +80,8 @@ export class ActividadesService {
         tipoActividad,
         oficinaOrigenActividad,
         prioridadActividad,
-        diasActivoActividad,
-        avanceActividad,
+        diasActivoActividad: 0,
+        avanceActividad: 10,
         isActive: true,
       };
       await this.actividadesRepository.save(toCreateActivity);
@@ -100,6 +97,16 @@ export class ActividadesService {
         isActive: true,
         tituloActividad: Not(IsNull()),
       },
+      relations: ['user', 'comentariosActivity'],
+      select: {
+        user: {
+          id: true,
+          nombre: true,
+          apellido: true,
+          email: true,
+          nivel: true,
+        },
+      },
     });
     return res.status(201).json(availableAct);
   }
@@ -108,18 +115,73 @@ export class ActividadesService {
     createComment: CreateCommentActivityDto,
     res: Response,
   ) {
-    const { actComentario, author, activityId } = createComment;
-
+    const { actComentario, author, activity } = createComment;
+    console.log(activity);
     await this.commentActivity.save({
-      activityId: activityId,
+      activity: activity,
       author: author,
       comentario: actComentario,
     });
-    return res.status(201).json('this endpoint creates a new activity comment');
+    return res.status(201).json('Comentario Guardado');
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} actividade`;
+  async activityCommenet(id: number, res: Response) {
+    const actComments = await this.commentActivity
+      .createQueryBuilder('actComments')
+      .where('actComments.activityId = :activityId', { activityId: id })
+      .getMany();
+    return res.status(201).json(actComments);
+  }
+
+  async userActivities(id: number, res: Response) {
+    const userActivities = await this.actividadesRepository.find({
+      where: {
+        tituloActividad: Not(IsNull()),
+        gestorActividad: Not(IsNull()),
+        user: { id: id },
+      },
+      relations: ['user', 'comentariosActivity'],
+      select: {
+        user: {
+          id: true,
+          nombre: true,
+          apellido: true,
+          email: true,
+          nivel: true,
+        },
+      },
+    });
+    return res.status(201).json(userActivities);
+  }
+
+  async userActivityAssigned(id: number, res: Response) {
+    const activityId = id;
+    const assignedActivity = await this.actividadesRepository
+      .createQueryBuilder('activity')
+      .leftJoin('activity.comentariosActivity', 'comentariosActivity')
+      .addSelect([
+        'comentariosActivity.id',
+        'comentariosActivity.comentario',
+        'comentariosActivity.author',
+        'comentariosActivity.createdDate',
+        'comentariosActivity.updatedDate',
+      ])
+      .leftJoin('activity.user', 'user')
+      .addSelect([
+        'user.id',
+        'user.nombre',
+        'user.apellido',
+        'user.email',
+        'user.nivel',
+      ])
+      .where('activity.gestorActividad IS NOT NULL')
+      .andWhere('activity.asignadosActividadId IS NOT NULL')
+      .andWhere('activity.tituloActividad IS NOT NULL')
+      .andWhere(':activityId = Any(activity.asignadosActividadId)', {
+        activityId,
+      })
+      .getMany();
+    return res.status(201).json(assignedActivity);
   }
 
   update(id: number, updateActividadeDto: UpdateActividadeDto) {

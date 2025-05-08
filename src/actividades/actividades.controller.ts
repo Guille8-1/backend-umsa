@@ -43,9 +43,19 @@ export class ActividadesController {
     return this.actividadesService.findAllActividades(res);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.actividadesService.findOne(+id);
+  @Get('/comment/activity/:id')
+  findOne(@Param('id') id: string, @Res() res: Response) {
+    return this.actividadesService.activityCommenet(+id, res);
+  }
+
+  @Get('/user/:id')
+  userActivities(@Param('id') id: string, @Res() res: Response) {
+    return this.actividadesService.userActivities(+id, res);
+  }
+
+  @Get('/assigned/:assigned')
+  assignedActivities(@Param('assigned') id: string, @Res() res: Response) {
+    return this.actividadesService.userActivityAssigned(+id, res);
   }
 
   @Patch(':id')
