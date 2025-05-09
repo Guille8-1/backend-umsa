@@ -58,3 +58,5 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 # Request testing
 *.rest
 *.session.sql
+# tar docker file
+saas-backendumsa.tar
