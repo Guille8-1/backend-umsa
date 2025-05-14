@@ -140,7 +140,7 @@ GET http://localhost:4000/actividades/user/97
 GET http://localhost:4000/actividades/assigned/99
 
 ###
-GET http://localhost:4000/actividades/comment/activity/97
+GET http://localhost:4000/actividades/comment/activity/5
 
 
 

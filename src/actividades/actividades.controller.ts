@@ -48,6 +48,7 @@ export class ActividadesController {
     return this.actividadesService.activityCommenet(+id, res);
   }
 
+
   @Get('/user/:id')
   userActivities(@Param('id') id: string, @Res() res: Response) {
     return this.actividadesService.userActivities(+id, res);
