@@ -28,6 +28,11 @@ export class AuthController {
         return this.authService.getAllUsers(res)
     }
 
+    @Get('/users/')
+    getUsersAssign(@Res() res: Response){
+        return this.authService.getAllUsersAssigned(res)
+    }
+
     @Post('/userids')
     getUserId(@Body() getUsersIds: GetUserByIds, @Res() res: Response){
         return this.authService.getUserByIds(getUsersIds ,res)

@@ -150,6 +150,23 @@ export class AuthService {
         res.status(201).json(userResponse);
     }
 
+    async getAllUsersAssigned(res: Response) {
+        const allUsers = await this.userRepository.find({
+            where:{
+                nombre: Not(IsNull()),
+                apellido: Not(IsNull())
+            },
+            select: {
+                id: true,
+                nombre: true,
+                apellido: true,
+                nivel: true,
+                admin: true
+            }
+        });
+        return res.status(201).json(allUsers);
+    }
+
     async deleteUser(id: number, res: Response) {
         const user = await this.userRepository.findOne({
             where: {id:id},
