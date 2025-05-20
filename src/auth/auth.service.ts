@@ -41,7 +41,8 @@ export class AuthService {
             email,
             password: hashedPw,
             admin: isAdmin,
-            nivel
+            nivel,
+            active: true
         }
 
         await this.userRepository.save(registerUser)
@@ -82,7 +83,6 @@ export class AuthService {
         if(!token){
             return res.status(401).json({error:'Token No Valido o Autorizados'})
         }
-
         try {
             const decoded = verify(token, process.env.JWT_KEY)
             if(typeof decoded === 'object' && decoded.id){
@@ -91,7 +91,8 @@ export class AuthService {
                     id:req.user.id,
                     name: req.user.nombre,
                     lastName: req.user.apellido,
-                    admin: req.user.admin
+                    admin: req.user.admin,
+                    nivel: req.user.nivel,
                 })
             }
             
@@ -128,14 +129,25 @@ export class AuthService {
                 apellido: Not(IsNull())
             },
             select: {
+                id: true,
                 nombre: true,
                 apellido: true,
-                nivel: true
+                nivel: true,
+                admin: true
             }
-        })
-        
-        
-        res.status(201).json(allUsers)
+        });
+        const formattedResponse = [...allUsers]
+        const userResponse = formattedResponse.map((res)=> {
+            const adminLevel:string = res.admin ? 'si' : 'no'
+            return {
+                id: res.id,
+                name: res.nombre,
+                lastName: res.apellido,
+                admin: adminLevel,
+                nivel: res.nivel,
+            }
+        });
+        res.status(201).json(userResponse);
     }
 
     async deleteUser(id: number, res: Response) {
@@ -150,6 +162,10 @@ export class AuthService {
         .where('id = :id', {id: id})
         .execute()
 
-        res.json(`Usuario ${user.nombre + user.apellido} fue eliminado`)
+        res.status(201).json(`Usuario ${user.nombre + user.apellido} fue eliminado`)
+    }
+
+    async alwaysError(res: Response) {
+        res.status(401).json('error')
     }
 }

@@ -142,9 +142,17 @@ GET http://localhost:4000/actividades/assigned/99
 ###
 GET http://localhost:4000/actividades/comment/activity/5
 
+###
+POST http://localhost:4000/actividades/commentactividad
+Content-Type: application/json
 
-
-
+{
+  "activity": "7",
+  "actComentario": "nuevo testing",
+  "author": "guille aramayo"
+}
+###
+GET http://localhost:4000/auth/active/users
 
 
 

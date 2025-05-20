@@ -23,7 +23,7 @@ export class AuthController {
     verifyUser (@Res() res: Response, @Req() req: Request ){ 
         return this.authService.verifyUser(res, req)
     }
-    @Get('/users')
+    @Get('/active/users')
     getUsers(@Res() res: Response) {
         return this.authService.getAllUsers(res)
     }
@@ -38,8 +38,12 @@ export class AuthController {
         return this.authService.getUserById(params.userId, res)
     }
 
-    @Delete(':userId')
+    @Delete('/delete/:userId')
     deleteUser(@Param(new ValidationPipe()) params: DeleteUserDto, @Res() res: Response ){
         return this.authService.deleteUser(params.userId, res)
+    }
+    @Post('/alwayserror')
+    errorFn(@Res() res: Response) {
+        return this.authService.alwaysError(res)
     }
 }

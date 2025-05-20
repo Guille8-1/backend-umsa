@@ -25,6 +25,9 @@ export class Users {
     @Column({nullable: true})
     nivel:number
 
+    @Column({nullable:true})
+    active: boolean
+
     @CreateDateColumn({type: Date})
     created: Date
 
