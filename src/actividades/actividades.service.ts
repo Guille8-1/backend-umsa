@@ -30,6 +30,7 @@ export class ActividadesService {
     const {
       user,
       tituloActividad,
+      categoriaActividad,
       asignadosActividadId,
       gestorActividad,
       estadoActividad,
@@ -73,6 +74,7 @@ export class ActividadesService {
       const toCreateActivity = {
         user,
         tituloActividad,
+        categoriaActividad,
         asignadosActividad: usrActivity,
         asignadosActividadId,
         gestorActividad,

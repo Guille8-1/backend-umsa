@@ -19,6 +19,9 @@ export class Activities {
   @Column({ type: 'varchar', nullable: true, length: 255 })
   tituloActividad: string;
 
+  @Column({ type: 'varchar', nullable: true, length: 255 })
+  categoriaActividad: string;
+
   @Column('text', { array: true })
   asignadosActividad: string[];
 

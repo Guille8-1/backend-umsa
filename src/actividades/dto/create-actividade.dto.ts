@@ -23,6 +23,11 @@ export class CreateActividadeDto {
   @MinLength(3, { message: 'Titulo Valido' })
   tituloActividad: string;
 
+  @IsString({ message: 'Tipo Actividad no Valido' })
+  @IsNotEmpty({ message: 'Tipo Actividad no Valido' })
+  @MinLength(3, { message: 'Tipo Actividad no Valido' })
+  categoriaActividad: string;
+
   @IsArray()
   @ArrayMinSize(1)
   @ArrayMaxSize(10)
