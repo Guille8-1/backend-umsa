@@ -11,8 +11,7 @@ import {
     ArrayMaxSize,
     IsInt,
 } from 'class-validator';
-import { ValidatorConstraintInterface, ValidationArguments } from 'class-validator';
-import { Users } from 'src/auth/entities/users.entity';
+import { Users } from '../../users/entities/user.entity';
 
 export class CreateProjectDto {
     @IsNumber()

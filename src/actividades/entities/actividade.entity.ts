@@ -8,13 +8,13 @@ import {
   OneToMany,
   IsNull,
 } from 'typeorm';
-import { Users } from '../../auth/entities/users.entity';
+import { Users } from '../../users/entities/user.entity';
 import { CommentsActivities } from './actividadecoment.entity';
 
 @Entity()
 export class Activities {
   @PrimaryGeneratedColumn()
-  id: Users;
+  id: number;
 
   @Column({ type: 'varchar', nullable: true, length: 255 })
   tituloActividad: string;

@@ -5,7 +5,7 @@ import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { Projects } from './entities/projects.entity';
 import { Comments } from './entities/comments.entity';
-import { Users } from 'src/auth/entities/users.entity';
+import { Users } from '../users/entities/user.entity';
 import { CommentProjectDto } from './dto/comments-project.dto';
 import { Response } from 'express';
 
@@ -134,7 +134,8 @@ export class ProjectsService {
     const availableProjects = await this.projectRepository.find({
       where: {
         isActive: true,
-        titulo: Not(IsNull())
+        titulo: Not(IsNull()),
+        user: Not(IsNull())
       },
       relations: ['comentarios', 'user'],
       select:{
@@ -155,7 +156,7 @@ export class ProjectsService {
       where: {
         titulo: Not(IsNull()),
         gestor: Not(IsNull()),
-        user:{id: id}
+        user: {id: id}
       },
       relations: ['user','comentarios'],
       select: {
@@ -196,6 +197,7 @@ export class ProjectsService {
       .where('project.gestor IS NOT NULL')
       .andWhere('project.asignadosId IS NOT NULL')
       .andWhere('project.titulo IS NOT NULL')
+      .andWhere('project.user IS NOT NULL')
       .andWhere(':assignedId = Any(project.asignadosId)', { assignedId })
       .getMany()
     return res.status(200).json(assignedProject);

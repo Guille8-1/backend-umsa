@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, UpdateDateColumn, Entity, PrimaryGeneratedColumn, ManyToOne, OneToMany, IsNull} from 'typeorm'
-import { Users } from '../../auth/entities/users.entity'
+import { Users } from '../../users/entities/user.entity'
 import { Comments } from './comments.entity'
 
 

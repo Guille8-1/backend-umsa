@@ -12,7 +12,7 @@ import {
   IsInt,
   Min,
 } from 'class-validator';
-import { Users } from '../../auth/entities/users.entity';
+import { Users } from '../../users/entities/user.entity';
 
 export class CreateActividadeDto {
   @IsNumber()

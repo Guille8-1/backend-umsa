@@ -4,7 +4,7 @@ import { ProjectsService } from './projects.service';
 import { ProjectsController } from './projects.controller';
 import { Projects } from './entities/projects.entity';
 import { Comments } from './entities/comments.entity';
-import { Users } from 'src/auth/entities/users.entity';
+import { Users } from '../users/entities/user.entity';
 
 
 @Module({

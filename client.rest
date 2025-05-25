@@ -4,15 +4,15 @@ GET http://localhost:4000/hello
 
 ###
 //Create User endpoint
-POST http://localhost:4000/auth/create-user
+POST http://localhost:4000/users/create-user
 Content-Type: application/json
 
 {
-    "nombre": "marco",
-    "apellido": "garay",
-    "email": "marcogaray662@gmail.com",
-    "password": "huevos1",
-    "nivel": "1"
+    "nombre": "nuewUser",
+    "apellido": "userLast",
+    "email": "testmyuser@gmail.com",
+    "password": "huevos123",
+    "nivel": "4"
 }
 
 ###
@@ -22,7 +22,7 @@ Content-Type: application/json
 
 {
     "email": "marcogaray662@gmail.com",
-    "password": "Huevos1"
+    "password": "huevos1"
 }
 
 ###
@@ -111,6 +111,8 @@ GET http://localhost:4000/auth/users
 //get admin projects
 ###
 GET http://localhost:4000/projects/user/97
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTgsIm5vbWJyZSI6Im1hcmNvIiwiYXBlbGxpZG8iOiJnYXJheSIsImFkbWluIjp0cnVlLCJpYXQiOjE3NDgxOTIzNTEsImV4cCI6MTc0ODIwNjc1MX0.Lb3hgndIhbPpIXZhY8td2Pj15GcWh1a_YyofWmYRQ3A
+
 //Get assigned projects
 ###
 GET http://localhost:4000/projects/assigned/100

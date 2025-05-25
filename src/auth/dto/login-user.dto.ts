@@ -54,6 +54,8 @@ export class VerifyUserDto {
     @IsString({message:'Token no Valido'})
     token:string
 }
+
+
 export class DeleteUserDto {
     @Type( () => Number )
     @IsInt()

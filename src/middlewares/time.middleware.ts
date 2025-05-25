@@ -1,6 +1,7 @@
 import { Injectable, NestMiddleware } from '@nestjs/common'
 import { Request, Response, NextFunction } from 'express'
 
+
 @Injectable()
 export class TimeMiddleWare implements NestMiddleware{
     use(req: Request, res: Response, next: NextFunction) {
@@ -9,12 +10,5 @@ export class TimeMiddleWare implements NestMiddleware{
         });
         res.setHeader('Date', date);
         next();
-    }
-}
-
-@Injectable()
-export class BearerTokenVerify implements NestMiddleware{
-    use(req: Request, res: Response, next: NextFunction) {
-
     }
 }
