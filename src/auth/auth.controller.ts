@@ -10,12 +10,12 @@ export class AuthController {
     constructor (private readonly authService: AuthService) {}
 
 
-    @Post('login-user')
+    @Post('/login-user')
     loginUser(@Body() loginUser: LoginUserDto, @Res()  res: Response) {
         return this.authService.loginUser(loginUser, res)
     }
 
-    @Get('user-token')
+    @Get('/user-token')
     verifyUser (@Res() res: Response, @Req() req: Request ){ 
         return this.authService.verifyUser(res, req)
     }

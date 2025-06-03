@@ -17,6 +17,7 @@ import { Activities } from './actividades/entities/actividade.entity';
 import { Users } from './users/entities/user.entity';
 import { CronjobsServices } from './cronjobs/cronjobs.service';
 import { UsersModule } from './users/users.module';
+import { ReportsModule } from './reports/reports.module';
 
 
 
@@ -41,6 +42,7 @@ import { UsersModule } from './users/users.module';
     TypeOrmModule.forFeature([Projects, Activities, Users]),
     ActividadesModule,
     UsersModule,
+    ReportsModule,
   ],
   controllers: [AppController],
   providers: [AppService, CronjobsServices],
@@ -49,6 +51,6 @@ export class AppModule {
   configure (consumer: MiddlewareConsumer) {
     consumer.apply(TimeMiddleWare).forRoutes("*")
     consumer.apply(BearerTokenVerify).
-    forRoutes("/projects/*", '/actividades/*', '/users/*');
+    forRoutes("/projects/*", "/actividades/*", "/users/*", "/reports/*");
    }
 }
