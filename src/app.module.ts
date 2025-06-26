@@ -16,6 +16,7 @@ import { ActividadesModule } from './actividades/actividades.module';
 import { Activities } from './actividades/entities/actividade.entity';
 import { Users } from './users/entities/user.entity';
 import { CronjobsServices } from './cronjobs/cronjobs.service';
+import { ActivitiesService } from './cronjobs/activities.cronjobs';
 import { UsersModule } from './users/users.module';
 import { ReportsModule } from './reports/reports.module';
 
@@ -37,15 +38,15 @@ import { ReportsModule } from './reports/reports.module';
     }),
     AuthModule,
     ProjectsModule,
-    FileModule,
-    ScheduleModule.forRoot(),
-    TypeOrmModule.forFeature([Projects, Activities, Users]),
     ActividadesModule,
     UsersModule,
     ReportsModule,
+    FileModule,
+    ScheduleModule.forRoot(),
+    TypeOrmModule.forFeature([Projects, Activities, Users]),
   ],
   controllers: [AppController],
-  providers: [AppService, CronjobsServices],
+  providers: [AppService, CronjobsServices, ActivitiesService],
 })
 export class AppModule {
   configure (consumer: MiddlewareConsumer) {

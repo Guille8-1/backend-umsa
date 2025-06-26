@@ -1,34 +1,32 @@
-import { Controller, Get, Post, Res, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Res, Body, Patch, Param, Delete, Query, HttpStatus } from '@nestjs/common';
 import { Response } from 'express'
 import { ReportsService } from './reports.service';
 import { DateRangeDto } from './dto/create-report.dto'
 
 @Controller('reports')
 export class ReportsController {
-  constructor(private readonly reportsService: ReportsService) {}
+  constructor(private readonly reportsService: ReportsService) 
+  {}
 
   @Post()
   create(@Body() createReportDto, @Res() res: Response) {
     return this.reportsService.create(createReportDto, res);
   }
 
-  @Get("/download")
-  async downloadReports(@Res() res: Response, @Query() dateRange: DateRangeDto) {
+  @Post("/download")
+  async downloadReports(@Res() res: Response, @Body() dateRange: DateRangeDto) {
     
-    const {start, end} = dateRange;
+    const {start, end, userId} = dateRange;
 
     const startDate = new Date(start);
     const endDate = new Date(end);
 
-    const buffer = await this.reportsService.generateExcel(startDate, endDate);
+    const buffer = await this.reportsService.generateExcel(new Date(startDate), new Date(endDate), userId);
 
-    res.set({
-      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      'Content-Disposition': `attachment; filename="report_${start}_${end}"`,
-    });
-
-    res.end(buffer);
-
+    //res.json('Reporte de Proyectos Generado')
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', 'attachment; filename=report.xlsx');
+    res.status(202).json('Reporte Creado!').send(buffer);
   }
 
   @Get(':id')
