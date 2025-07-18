@@ -9,7 +9,6 @@ import { CreateUserDto, DeleteUserDto, GetUserDto, LoginUserDto, GetUserByIds } 
 export class AuthController {
     constructor (private readonly authService: AuthService) {}
 
-
     @Post('/login-user')
     loginUser(@Body() loginUser: LoginUserDto, @Res()  res: Response) {
         return this.authService.loginUser(loginUser, res)
