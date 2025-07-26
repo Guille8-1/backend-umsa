@@ -10,7 +10,7 @@ export class ReportsService {
   constructor(
     @InjectRepository(Projects)
     private readonly projectRepository: Repository<Projects>
-  ){}
+  ) {}
 
   async generateExcel(startDate: Date, endDate: Date, userId: number): Promise<Buffer> {
       const userIdReport = await this.projectRepository.find({
@@ -30,7 +30,7 @@ export class ReportsService {
           endDate: new Date(endDate),
         })
         .getMany()
-
+        
       const constructRport = userIdReport.concat(userAssignedReport)
 
       const noRepeatedQueries = (uniqueRecords: typeof constructRport) => {

@@ -6,11 +6,10 @@ export class DateRangeDto {
   start: string;
 
   @IsDateString()
-  end: string;  
+  end: string;
 
   @Type( () => Number )
   @IsInt()
   @Min(1)
   userId: number
-
 }

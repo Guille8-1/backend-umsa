@@ -17,16 +17,21 @@ export class ReportsController {
   async downloadReports(@Res() res: Response, @Body() dateRange: DateRangeDto) {
     
     const {start, end, userId} = dateRange;
+    console.log('estes es el rango',dateRange)
 
     const startDate = new Date(start);
     const endDate = new Date(end);
 
     const buffer = await this.reportsService.generateExcel(new Date(startDate), new Date(endDate), userId);
 
+    console.log('este es el buffer', buffer)
+
     //res.json('Reporte de Proyectos Generado')
-    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.setHeader('Content-Disposition', 'attachment; filename=report.xlsx');
-    res.status(202).json('Reporte Creado!').send(buffer);
+    res.set({
+      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Disposition': `attachment; filename:"reporte_de_${start}_a_${end}.xlsx"`
+    })
+    res.end(buffer)
   }
 
   @Get(':id')
