@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Response, Request } from 'express';
-import { CreateUserDto, GetUserByIds, LoginUserDto } from './dto/login-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from '../users/entities/user.entity';
-import { IsNull, Not, Repository } from 'typeorm';
-import { hash, compare } from 'bcrypt'
+import { Repository } from 'typeorm';
+import { compare } from 'bcrypt'
 import { sign, verify } from 'jsonwebtoken'
 import 'dotenv/config'
 
@@ -70,11 +70,12 @@ export class AuthService {
                 })
             }
         } catch (error) {
+            console.error(error)
             return res.status(401).json('Token No Valido o Autorizado')
         }
     }
 
     async alwaysError(res: Response, req: Request ) {
         res.status(401).json('error')
-    }
+     }
 }

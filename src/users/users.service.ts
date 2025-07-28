@@ -8,6 +8,7 @@ import { hash } from 'bcrypt'
 import 'dotenv/config'
 
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
     interface Request{
       user?: Users
@@ -33,7 +34,7 @@ export class UsersService {
 
     const hashedPw = await hash(password, 10);
 
-    let isAdmin: boolean
+    let isAdmin: boolean = true
     isAdmin = nivel < 4;
     const lowerName = nombre.toLowerCase();
     const lowerLastName = apellido.toLowerCase();
@@ -118,8 +119,9 @@ export class UsersService {
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
+    console.log(updateUserDto)
     return `This action updates a #${id} user`;
-  }
+   }
 
   async userIds(id: GetUserByIds, res: Response) {
     const {ids} = id
