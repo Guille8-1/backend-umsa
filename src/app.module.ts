@@ -19,6 +19,7 @@ import { CronjobsServices } from './cronjobs/cronjobs.service';
 import { ActivitiesService } from './cronjobs/activities.cronjobs';
 import { UsersModule } from './users/users.module';
 import { ReportsModule } from './reports/reports.module';
+import { AdminModule } from './admin/admin.module';
 
 
 
@@ -44,6 +45,7 @@ import { ReportsModule } from './reports/reports.module';
     FileModule,
     ScheduleModule.forRoot(),
     TypeOrmModule.forFeature([Projects, Activities, Users]),
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService, CronjobsServices, ActivitiesService],

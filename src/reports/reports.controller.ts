@@ -24,7 +24,6 @@ export class ReportsController {
 
     const buffer = await this.reportsService.generateExcel(new Date(startDate), new Date(endDate), userId);
 
-    console.log('este es el buffer', buffer)
 
     //res.json('Reporte de Proyectos Generado')
     res.set({
