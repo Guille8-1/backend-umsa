@@ -17,7 +17,7 @@ export class ProjectsService {
     @InjectRepository(Comments)
     private readonly commentRepository: Repository<Comments>,
     @InjectRepository(Users)
-    private readonly userRepository: Repository<Users>
+    private readonly userRepository: Repository<Users>,
   ) {}
 
   async createProject(createProjectDto: CreateProjectDto, res: Response) {
@@ -36,7 +36,6 @@ export class ProjectsService {
       oficinaOrigen,
       prioridad,
     } = createProjectDto;
-    
 
     const validStatus = ['activo', 'pendiente', 'cerrado', 'en_mora'];
     if (validStatus.some((statusMatch) => estado === statusMatch)) {
@@ -51,28 +50,27 @@ export class ProjectsService {
         return res.status(400).json('Proyecto Existente');
       }
 
-      const numberId: number[] = []
+      const numberId: number[] = [];
 
-      asignadosId.forEach((id)=> {
-        numberId.push(+id)
-      })
-      
+      asignadosId.forEach((id) => {
+        numberId.push(+id);
+      });
+
       const userNames = await this.userRepository.find({
-        where:{
-          id: In(numberId)
+        where: {
+          id: In(numberId),
         },
-        select:['nombre', 'apellido']
-      })
-      
-      const userProject: string[] = []
+        select: ['nombre', 'apellido'],
+      });
 
-      for(const name of userNames) {
-        const {nombre, apellido} = name
-        const userToSave = `${nombre} ${apellido}`
-        userProject.push(userToSave)
+      const userProject: string[] = [];
+
+      for (const name of userNames) {
+        const { nombre, apellido } = name;
+        const userToSave = `${nombre} ${apellido}`;
+        userProject.push(userToSave);
       }
-      
-      
+
       const toCreateWork = {
         user,
         titulo,
@@ -88,11 +86,10 @@ export class ProjectsService {
         avance,
         oficinaOrigen,
         prioridad,
-        isActive: true
+        isActive: true,
       };
-      
-      await this.projectRepository.save(toCreateWork);
 
+      await this.projectRepository.save(toCreateWork);
     } else {
       return res.status(400).json('Status No Valido');
     }
@@ -104,7 +101,7 @@ export class ProjectsService {
     await this.commentRepository.save({
       project: projectId,
       comentario: comentario,
-      author: author
+      author: author,
     });
     res.status(201).json('Comentario Guardado!');
 
@@ -119,15 +116,14 @@ export class ProjectsService {
     //     success: 'Comentario Creado!',
     //   }
     // );
-
   }
 
   async gettingProjectComment(id: number, res: Response) {
-      const projectComments = await this.commentRepository
-        .createQueryBuilder('comments')
-        .where('comments.projectId = :projectId', { projectId: id })
-        .getMany()
-      return res.status(201).json(projectComments);
+    const projectComments = await this.commentRepository
+      .createQueryBuilder('comments')
+      .where('comments.projectId = :projectId', { projectId: id })
+      .getMany();
+    return res.status(201).json(projectComments);
   }
 
   async findAllProjects(res: Response) {
@@ -135,18 +131,18 @@ export class ProjectsService {
       where: {
         isActive: true,
         titulo: Not(IsNull()),
-        user: Not(IsNull())
+        user: Not(IsNull()),
       },
       relations: ['comentarios', 'user'],
-      select:{
+      select: {
         user: {
           id: true,
           nombre: true,
           apellido: true,
           email: true,
-          nivel: true
-        }
-      }
+          nivel: true,
+        },
+      },
     });
     return res.status(201).json(availableProjects);
   }
@@ -156,24 +152,24 @@ export class ProjectsService {
       where: {
         titulo: Not(IsNull()),
         gestor: Not(IsNull()),
-        user: {id: id}
+        user: { id: id },
       },
-      relations: ['user','comentarios'],
+      relations: ['user', 'comentarios'],
       select: {
         user: {
           id: true,
           nombre: true,
           apellido: true,
           email: true,
-          nivel: true
-        }
-      }
-    })
+          nivel: true,
+        },
+      },
+    });
     return res.json(userProjects);
   }
 
   async userAssigned(id: number, res: Response) {
-    const assignedId = id
+    const assignedId = id;
     const assignedProject = await this.projectRepository
       .createQueryBuilder('project')
       .leftJoin('project.comentarios', 'comentarios')
@@ -182,24 +178,22 @@ export class ProjectsService {
         'comentarios.comentario',
         'comentarios.author',
         'comentarios.createdDate',
-        'comentarios.updatedDate'
+        'comentarios.updatedDate',
       ])
       .leftJoin('project.user', 'user')
-      .addSelect(
-        [
-          'user.id',
-          'user.nombre',
-          'user.apellido',
-          'user.email',
-          'user.nivel'
-        ]
-      )
+      .addSelect([
+        'user.id',
+        'user.nombre',
+        'user.apellido',
+        'user.email',
+        'user.nivel',
+      ])
       .where('project.gestor IS NOT NULL')
       .andWhere('project.asignadosId IS NOT NULL')
       .andWhere('project.titulo IS NOT NULL')
       .andWhere('project.user IS NOT NULL')
       .andWhere(':assignedId = Any(project.asignadosId)', { assignedId })
-      .getMany()
+      .getMany();
     return res.status(200).json(assignedProject);
   }
 
@@ -218,9 +212,8 @@ export class ProjectsService {
     updateProjectDto: UpdateProjectDto,
     res: Response,
   ) {
-    const asignados = updateProjectDto.asignados
+    const asignados = updateProjectDto.asignados;
     if (asignados) {
-      
       await this.projectRepository
         .createQueryBuilder()
         .update(Projects)
@@ -292,9 +285,10 @@ export class ProjectsService {
   }
 
   async testingDates(res: Response) {
-    const date = new Date().toLocaleString('lp-BO',{
-      timeZone:'America/La_Paz'
+    const date = new Date().toLocaleString('lp-BO', {
+      timeZone: 'America/La_Paz',
     });
+    console.log(date);
     return res.status(201).json('desde dates');
   }
 }

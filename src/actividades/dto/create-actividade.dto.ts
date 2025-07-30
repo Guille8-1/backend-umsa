@@ -1,9 +1,7 @@
 import { Type } from 'class-transformer';
 import {
   IsString,
-  IsJSON,
   IsNumber,
-  Validate,
   IsNotEmpty,
   MinLength,
   IsArray,

@@ -6,7 +6,6 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   OneToMany,
-  IsNull,
 } from 'typeorm';
 import { Users } from '../../users/entities/user.entity';
 import { CommentsActivities } from './actividadecoment.entity';

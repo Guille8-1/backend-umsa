@@ -2,7 +2,7 @@ import { Module, MiddlewareConsumer } from '@nestjs/common';
 import { typeOrmConfig } from './config/typeorm.config';
 import { TimeMiddleWare } from './middlewares/time.middleware';
 import { BearerTokenVerify } from './middlewares/verify-token.middleware';
-import { ConfigModule, ConfigService } from '@nestjs/config'
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -21,21 +21,21 @@ import { UsersModule } from './users/users.module';
 import { ReportsModule } from './reports/reports.module';
 import { AdminModule } from './admin/admin.module';
 
-
-
 @Module({
   imports: [
-    ThrottlerModule.forRoot([{
-      ttl: 5000,
-      limit:10,
-      blockDuration: 1000 * 2
-    }]),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 5000,
+        limit: 10,
+        blockDuration: 1000 * 2,
+      },
+    ]),
     ConfigModule.forRoot({
-      isGlobal: true
+      isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
       useFactory: typeOrmConfig,
-      inject: [ConfigService]
+      inject: [ConfigService],
     }),
     AuthModule,
     ProjectsModule,
@@ -51,9 +51,16 @@ import { AdminModule } from './admin/admin.module';
   providers: [AppService, CronjobsServices, ActivitiesService],
 })
 export class AppModule {
-  configure (consumer: MiddlewareConsumer) {
-    consumer.apply(TimeMiddleWare).forRoutes("*")
-    consumer.apply(BearerTokenVerify).
-    forRoutes("/projects/*", "/actividades/*", "/users/*", "/reports/*");
-   }
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(TimeMiddleWare).forRoutes('*');
+    consumer
+      .apply(BearerTokenVerify)
+      .forRoutes(
+        '/projects/*',
+        '/actividades/*',
+        '/users/*',
+        '/reports/*',
+        '/admin/update-pw',
+      );
+  }
 }

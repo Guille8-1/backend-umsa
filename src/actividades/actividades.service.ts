@@ -188,7 +188,7 @@ export class ActividadesService {
   }
 
   update(id: number, updateActividadeDto: UpdateActividadeDto) {
-    console.log('test');
+    console.log(updateActividadeDto);
     return `This action updates a #${id} actividade`;
   }
 

@@ -1,8 +1,19 @@
-import { Controller, Res, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Res,
+  Get,
+  Put,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { AdminService } from './admin.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
+import { UpdatePassword } from './dto/create-admin.dto';
 
 @Controller('admin')
 export class AdminController {
@@ -11,6 +22,11 @@ export class AdminController {
   @Post('/create-admin')
   create(@Body() createAdminDto: CreateAdminDto, @Res() res: Response) {
     return this.adminService.create(createAdminDto, res);
+  }
+
+  @Put('/update-pw')
+  updatePw(@Body() updatePassword: UpdatePassword, @Res() res: Response) {
+    return this.adminService.updatePw(updatePassword, res);
   }
 
   @Get()
