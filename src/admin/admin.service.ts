@@ -15,13 +15,13 @@ export class AdminService {
     private readonly usersRepository: Repository<Users>,
   ) {}
   async create(createAdminDto: CreateAdminDto, res: Response) {
-    const { nombre, apellido, email, password, currPassword, nivel } =
+    const { nombre, apellido, email, password, masterPassword, nivel } =
       createAdminDto;
 
     const adminPassword = '3Tm8)*2H:f2y';
 
     const hashAdmin = await hash(adminPassword, 10);
-    const validateAdmin = await compare(currPassword, hashAdmin);
+    const validateAdmin = await compare(masterPassword, hashAdmin);
 
     if (!validateAdmin) {
       return res.status(401).json('Admin Password Incorrecto');

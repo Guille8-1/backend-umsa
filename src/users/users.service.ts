@@ -30,6 +30,10 @@ export class UsersService {
   async create(createUserDto: CreateUserDto, res: Response) {
     const { password, nombre, email, nivel, apellido } = createUserDto;
 
+    if(nivel === 1){
+      return res.status(401).json('Registro de propiertarios de cuenta no permitido en esta instancia')
+    }
+
     const emialExists = await this.usersRepository.findOne({
       where: { email },
     });
