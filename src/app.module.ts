@@ -21,6 +21,11 @@ import { UsersModule } from './users/users.module';
 import { ReportsModule } from './reports/reports.module';
 import { AdminModule } from './admin/admin.module';
 
+//login register mongoDB initial configuration
+import {MongooseModule} from '@nestjs/mongoose';
+import { SessionsModule } from './sessions/sessions.module';
+
+
 @Module({
   imports: [
     ThrottlerModule.forRoot([
@@ -36,6 +41,13 @@ import { AdminModule } from './admin/admin.module';
     TypeOrmModule.forRootAsync({
       useFactory: typeOrmConfig,
       inject: [ConfigService],
+    }), 
+    MongooseModule.forRootAsync({
+    inject: [ConfigService],
+    useFactory: (config: ConfigService) => ({
+      uri: config.get<string>('MONGO_URI'),
+      dbName: 'sessionDB',
+      })
     }),
     AuthModule,
     ProjectsModule,
@@ -46,6 +58,7 @@ import { AdminModule } from './admin/admin.module';
     ScheduleModule.forRoot(),
     TypeOrmModule.forFeature([Projects, Activities, Users]),
     AdminModule,
+    SessionsModule,
   ],
   controllers: [AppController],
   providers: [AppService, CronjobsServices, ActivitiesService],

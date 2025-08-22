@@ -10,9 +10,9 @@ async function bootstrap() {
     whitelist: true,
     transform: true
   }))
-  // app.enableCors({
-  //   origin: "http://localhost:3000",
-  // })
+  app.enableCors({
+    origin: process.env.URL_FRONT,
+  })
   await app.listen(process.env.SERVER_PORT);
 }
 bootstrap();
