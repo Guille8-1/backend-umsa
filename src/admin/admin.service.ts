@@ -18,15 +18,6 @@ export class AdminService {
     const { nombre, apellido, email, password, masterPassword, nivel } =
       createAdminDto;
 
-    // const re = /^[A-Za-z0-9._%+-]+@umsa\.com$/i;
-    //
-    // const emailValidation = re.test(email);
-    //
-    // if(!emailValidation){
-    //   console.log('email no valido');
-    //   res.status(401).json('Email');
-    // }
-
     const adminPassword = '3Tm8)*2H:f2y';
 
     const hashAdmin = await hash(adminPassword, 10);

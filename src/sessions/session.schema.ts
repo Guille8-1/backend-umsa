@@ -6,16 +6,19 @@ export type SessionDocument = Session & Document;
 @Schema()
 export class Session {
   @Prop({required: true})
-  name: string;
+  userName: string;
 
   @Prop({required: true})
-  id: number;
-  
+  userLastName: string;
+
+  @Prop({required: true})
+  userId: number;
+
   @Prop({required: true})
   email: string;
 
-  @Prop({required: true})
+  @Prop({required: true, default: true})
   isAlive: boolean;
 }
 
-export const SessionSchema = SchemaFactory.createForClass(Session);
+export const SessionSchema = SchemaFactory.createForClass(Session)

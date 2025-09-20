@@ -207,57 +207,29 @@ export class ProjectsService {
     return res.status(201).json(project);
   }
 
-  async updateProject(
-    id: number,
-    updateProjectDto: UpdateProjectDto,
+  async updateProject( id: number, 
+    updateProject: UpdateProjectDto,
     res: Response,
   ) {
-    const asignados = updateProjectDto.asignados;
-    if (asignados) {
-      await this.projectRepository
-        .createQueryBuilder()
-        .update(Projects)
-        .where('id = :id', { id: id })
-        .set({
-          asignados: asignados,
-        })
-        .execute();
-    }
+    //const asignados = updateProjectDto.asignados;
+    // if (asignados) {
+    //   await this.projectRepository
+    //     .createQueryBuilder()
+    //     .update(Projects)
+    //     .where('id = :id', { id: updateProjectDto.id })
+    //     .set({
+    //       asignados: asignados,
+    //     })
+    //     .execute();
+    // }
 
-    if (updateProjectDto.titulo) {
-      await this.projectRepository
-        .createQueryBuilder()
-        .update(Projects)
-        .where('id = :id', { id: id })
-        .set({
-          titulo: updateProjectDto.titulo,
-        })
-        .execute();
-    }
+    console.log(`update with the id, {id}`)
+    console.log(updateProject)
 
-    if (updateProjectDto.estado) {
-      await this.projectRepository
-        .createQueryBuilder()
-        .update(Projects)
-        .where('id = :id', { id: id })
-        .set({
-          estado: updateProjectDto.estado,
-        })
-        .execute();
+    res
+      .status(201)
+      .json(`going forwar editing a body project with the id ${id}`);
     }
-
-    if (updateProjectDto.prioridad) {
-      await this.projectRepository
-        .createQueryBuilder()
-        .update(Projects)
-        .where('id = :id', { id: id })
-        .set({
-          prioridad: updateProjectDto.prioridad,
-        })
-        .execute();
-    }
-    return res.status(201).json('Cambios Guardados');
-  }
 
   async removeProject(id: number, res: Response) {
     const project = await this.projectRepository.findOne({

@@ -60,10 +60,9 @@ export class ProjectsController {
     return this.projectsService.findOneProject(+id, res);
   }
 
-  @Patch(':paramId')
-  update(@Param(new ValidationPipe()) params: UpdateProjectDto, @Body() updateProjectDto: UpdateProjectDto, @Res() res: Response) {
-    console.log(params.paramId)
-    return this.projectsService.updateProject(params.paramId, updateProjectDto, res);
+  @Patch('/update/:id')
+  update(@Param('id') id: number, @Body() updateProject: UpdateProjectDto, @Res() res: Response) {
+    return this.projectsService.updateProject(id, updateProject, res);
   }
 
   @Delete(':paramId')
