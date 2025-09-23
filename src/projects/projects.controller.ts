@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Res, ValidationPipe 
 import { Response } from 'express';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
-import { UpdateProjectDto } from './dto/update-project.dto';
+import { UpdateProjectDto, UpdateAssigneesDto } from './dto/update-project.dto';
 import { CommentProjectDto } from './dto/comments-project.dto'; 
 import { DeleteProjectDto } from './dto/delete-project.dto';
 import { TestDto } from './dto/test.test.dto';
@@ -63,6 +63,11 @@ export class ProjectsController {
   @Patch('/update/:id')
   update(@Param('id') id: number, @Body() updateProject: UpdateProjectDto, @Res() res: Response) {
     return this.projectsService.updateProject(id, updateProject, res);
+  }
+
+  @Patch('/updateusers/:id')
+  updateAssigness(@Param('id') id: number, @Body() updateAssignees: UpdateAssigneesDto, @Res() res: Response) {
+    return this.projectsService.updateAssigness(id, updateAssignees, res);
   }
 
   @Delete(':paramId')

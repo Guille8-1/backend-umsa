@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, IsNull, Not, Repository } from 'typeorm';
 import { CreateProjectDto } from './dto/create-project.dto';
-import { UpdateProjectDto } from './dto/update-project.dto';
+import { UpdateProjectDto, UpdateAssigneesDto } from './dto/update-project.dto';
 import { Projects } from './entities/projects.entity';
 import { Comments } from './entities/comments.entity';
 import { Users } from '../users/entities/user.entity';
@@ -223,13 +223,17 @@ export class ProjectsService {
     //     .execute();
     // }
 
-    console.log(`update with the id, {id}`)
-    console.log(updateProject)
-
     res
       .status(201)
-      .json(`going forwar editing a body project with the id ${id}`);
-    }
+      .json(`going forward editing a body project with the id ${id}`);
+  }
+
+  async updateAssigness(id: number, updateAssigneed: UpdateAssigneesDto, res: Response){
+   res
+   .status(201)
+   .json(`asignados recibidos all good ejecutando update para el proyecto con el id ${id}`)
+  }
+    
 
   async removeProject(id: number, res: Response) {
     const project = await this.projectRepository.findOne({

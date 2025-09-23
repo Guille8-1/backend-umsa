@@ -18,3 +18,12 @@ export class UpdateProjectDto {
     @IsString({message:'Prioridad no Valida'})
     prioridad: string
 }
+
+export class UpdateAssigneesDto {
+    @IsArray()
+    @ArrayMinSize(1)
+    @ArrayMaxSize(10)
+    @Type(() => Number)
+    @IsInt({each: true})
+    asignadosId: number[]
+}
