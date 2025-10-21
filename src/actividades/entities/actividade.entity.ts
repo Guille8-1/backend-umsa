@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { Users } from '../../users/entities/user.entity';
 import { CommentsActivities } from './actividadecoment.entity';
+import { ActivitiesLog } from './activitylog.entity';
 
 @Entity()
 export class Activities {
@@ -63,6 +64,12 @@ export class Activities {
     },
   )
   comentariosActivity: CommentsActivities;
+
+  @OneToMany(()=> ActivitiesLog, (activityLog)=>activityLog.activity,{
+    cascade:true,
+    onDelete: 'CASCADE'
+  })
+  logs: ActivitiesLog
 
   @CreateDateColumn({
     type: 'timestamptz',

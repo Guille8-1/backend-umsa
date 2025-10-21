@@ -37,7 +37,7 @@ export class ProjectsService {
       prioridad,
     } = createProjectDto;
 
-    const validStatus = ['activo', 'pendiente', 'cerrado', 'en_mora'];
+    const validStatus = ['activo', 'pendiente', 'cerrado', 'mora'];
     if (validStatus.some((statusMatch) => estado === statusMatch)) {
       const validProject = await this.projectRepository.find({
         where: { estado: estado },
@@ -50,15 +50,9 @@ export class ProjectsService {
         return res.status(400).json('Proyecto Existente');
       }
 
-      const numberId: number[] = [];
-
-      asignadosId.forEach((id) => {
-        numberId.push(+id);
-      });
-
       const userNames = await this.userRepository.find({
         where: {
-          id: In(numberId),
+          id: In(asignadosId),
         },
         select: ['nombre', 'apellido'],
       });
@@ -71,7 +65,7 @@ export class ProjectsService {
         userProject.push(userToSave);
       }
 
-      const toCreateWork = {
+      const toCreateProject = {
         user,
         titulo,
         asignados: userProject,
@@ -89,9 +83,9 @@ export class ProjectsService {
         isActive: true,
       };
 
-      await this.projectRepository.save(toCreateWork);
+      await this.projectRepository.save(toCreateProject);
     } else {
-      return res.status(400).json('Status No Valido');
+      return res.status(400).json('Estado No Valido');
     }
     return res.status(201).json('Proyecto Creado!');
   }
@@ -229,9 +223,33 @@ export class ProjectsService {
   }
 
   async updateAssigness(id: number, updateAssigneed: UpdateAssigneesDto, res: Response){
-   res
-   .status(201)
-   .json(`asignados recibidos all good ejecutando update para el proyecto con el id ${id}`)
+    
+    const { asignadosId, userId } = updateAssigneed;
+
+    await this.projectRepository.update(id,{
+      asignadosId: asignadosId
+    })
+
+    const assignedNew = await this.userRepository.find({
+      where: {
+        id: In(asignadosId)
+      },
+      select: ['nombre', 'apellido'],
+    });
+
+    const newAssigned:string[] = []
+
+    for(const newAss of assignedNew){
+      const {nombre, apellido} = newAss;
+      const userNewAssinged = `${nombre} ${apellido}`;
+      newAssigned.push(userNewAssinged);
+    }
+
+    await this.projectRepository.update(id, {
+      asignados: newAssigned
+    });
+
+    return res.status(201).json(`Asignados Cambiados`)
   }
     
 

@@ -42,7 +42,7 @@ export class CreateProjectDto {
     @IsString({message:'estado no Valido'})
     estado: string
     
-    @IsString({message:'estado no Valido'})
+    @IsString({message:'tipo no Valido'})
     tipo: string
     
     @IsString()

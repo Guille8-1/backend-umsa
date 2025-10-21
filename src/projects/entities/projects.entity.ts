@@ -1,6 +1,7 @@
 import { Column, CreateDateColumn, UpdateDateColumn, Entity, PrimaryGeneratedColumn, ManyToOne, OneToMany, IsNull} from 'typeorm'
 import { Users } from '../../users/entities/user.entity'
 import { Comments } from './comments.entity'
+import { ProjectsLog } from './logs.entity'
 
 
 @Entity()
@@ -68,6 +69,12 @@ export class Projects {
         onDelete: 'CASCADE'
     })
     comentarios: Comments
+
+    @OneToMany(()=> ProjectsLog, (log) => log.project,{
+        cascade: true,
+        onDelete: 'CASCADE'
+    })
+    logs: ProjectsLog
 
     @CreateDateColumn({
         type: 'timestamptz', 

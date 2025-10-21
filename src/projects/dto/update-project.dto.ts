@@ -26,4 +26,8 @@ export class UpdateAssigneesDto {
     @Type(() => Number)
     @IsInt({each: true})
     asignadosId: number[]
+
+    @Type(()=>Number)
+    @IsNumber()
+    userId: string
 }
