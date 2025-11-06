@@ -22,9 +22,8 @@ import { ReportsModule } from './reports/reports.module';
 import { AdminModule } from './admin/admin.module';
 
 //login register mongoDB initial configuration
-import {MongooseModule} from '@nestjs/mongoose';
+import { MongooseModule } from '@nestjs/mongoose';
 import { SessionsModule } from './sessions/sessions.module';
-
 
 @Module({
   imports: [
@@ -41,13 +40,13 @@ import { SessionsModule } from './sessions/sessions.module';
     TypeOrmModule.forRootAsync({
       useFactory: typeOrmConfig,
       inject: [ConfigService],
-    }), 
+    }),
     MongooseModule.forRootAsync({
-    inject: [ConfigService],
-    useFactory: (config: ConfigService) => ({
-      uri: config.get<string>('MONGO_URI'),
-      dbName: 'sessionDB',
-      })
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        uri: config.get<string>('MONGO_URI'),
+        dbName: 'sessionDB',
+      }),
     }),
     AuthModule,
     ProjectsModule,

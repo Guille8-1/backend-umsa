@@ -201,7 +201,8 @@ export class ProjectsService {
     return res.status(201).json(project);
   }
 
-  async updateProject( id: number, 
+  async updateProject(
+    id: number,
     updateProject: UpdateProjectDto,
     res: Response,
   ) {
@@ -222,36 +223,38 @@ export class ProjectsService {
       .json(`going forward editing a body project with the id ${id}`);
   }
 
-  async updateAssigness(id: number, updateAssigneed: UpdateAssigneesDto, res: Response){
-    
-    const { asignadosId, userId } = updateAssigneed;
+  async updateAssigness(
+    id: number,
+    updateAssigneed: UpdateAssigneesDto,
+    res: Response,
+  ) {
+    const { asignadosId } = updateAssigneed;
 
-    await this.projectRepository.update(id,{
-      asignadosId: asignadosId
-    })
+    await this.projectRepository.update(id, {
+      asignadosId: asignadosId,
+    });
 
     const assignedNew = await this.userRepository.find({
       where: {
-        id: In(asignadosId)
+        id: In(asignadosId),
       },
       select: ['nombre', 'apellido'],
     });
 
-    const newAssigned:string[] = []
+    const newAssigned: string[] = [];
 
-    for(const newAss of assignedNew){
-      const {nombre, apellido} = newAss;
+    for (const newAss of assignedNew) {
+      const { nombre, apellido } = newAss;
       const userNewAssinged = `${nombre} ${apellido}`;
       newAssigned.push(userNewAssinged);
     }
 
     await this.projectRepository.update(id, {
-      asignados: newAssigned
+      asignados: newAssigned,
     });
 
-    return res.status(201).json(`Asignados Cambiados`)
+    return res.status(201).json(`Asignados Cambiados`);
   }
-    
 
   async removeProject(id: number, res: Response) {
     const project = await this.projectRepository.findOne({

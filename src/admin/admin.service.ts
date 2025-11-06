@@ -8,6 +8,7 @@ import { UpdateAdminDto } from './dto/update-admin.dto';
 import { hash } from 'bcrypt';
 import { compare } from 'bcrypt';
 
+
 @Injectable()
 export class AdminService {
   constructor(
@@ -18,7 +19,7 @@ export class AdminService {
     const { nombre, apellido, email, password, masterPassword, nivel } =
       createAdminDto;
 
-    const adminPassword = '3Tm8)*2H:f2y';
+    const adminPassword = process.env.USR_PW;
 
     const hashAdmin = await hash(adminPassword, 10);
     const validateAdmin = await compare(masterPassword, hashAdmin);

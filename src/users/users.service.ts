@@ -30,8 +30,12 @@ export class UsersService {
   async create(createUserDto: CreateUserDto, res: Response) {
     const { password, nombre, email, nivel, apellido } = createUserDto;
 
-    if(nivel === 1){
-      return res.status(401).json('Registro de propiertarios de cuenta no permitido en esta instancia')
+    if (nivel === 1) {
+      return res
+        .status(401)
+        .json(
+          'Registro de propiertarios de cuenta no permitido en esta instancia',
+        );
     }
 
     const emialExists = await this.usersRepository.findOne({
@@ -53,8 +57,11 @@ export class UsersService {
 
     let isAdmin: boolean = true;
     isAdmin = nivel < 4;
-    const lowerName = nombre.toLowerCase();
-    const lowerLastName = apellido.toLowerCase();
+    const capFirstLetter = (name: string) => {
+      return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+    };
+    const lowerName = capFirstLetter(nombre);
+    const lowerLastName = capFirstLetter(apellido);
 
     const registerUser = {
       nombre: lowerName,
