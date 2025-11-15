@@ -8,6 +8,9 @@ import { UpdateAdminDto } from './dto/update-admin.dto';
 import { hash } from 'bcrypt';
 import { compare } from 'bcrypt';
 
+const capFirstLetter = (name: string) => {
+  return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+};
 
 @Injectable()
 export class AdminService {
@@ -42,17 +45,17 @@ export class AdminService {
     });
 
     if (emialExists || nameExists) {
-      return res.status(401).json('Usuario Ya Registrado');
+      return res.status(401).json('Admin Ya Registrado');
     }
 
     const hashedPw = await hash(password, 10);
 
-    const lowerName = nombre.toLowerCase();
-    const lowerLastName = apellido.toLocaleLowerCase();
+    const adminName = nombre;
+    const adminLastName = apellido;
 
     const registerAnAdmin = {
-      nombre: lowerName,
-      apellido: lowerLastName,
+      nombre: capFirstLetter(adminName),
+      apellido: capFirstLetter(adminLastName),
       email,
       password: hashedPw,
       admin: true,

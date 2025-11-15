@@ -1,9 +1,13 @@
-import { CreateProjectDto } from './create-project.dto';
 import { ArrayMaxSize, ArrayMinSize, IsArray, IsInt, IsNumber, IsString, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 
 
 export class UpdateProjectDto {
+
+    @Type( () => Number )
+    @IsInt()
+    @Min(1)
+    projectId: number
 
     @IsString({message:'Estado no Valido'})
     estado: string
@@ -17,12 +21,21 @@ export class UpdateProjectDto {
 
     @IsString({message:'Prioridad no Valida'})
     prioridad: string
+
+    @Type(()=>Number)
+    @IsNumber()
+    userId: string
 }
 
 export class UpdateAssigneesDto {
+    @Type( () => Number )
+    @IsInt()
+    @Min(1)
+    projectId: number
+
     @IsArray()
     @ArrayMinSize(1)
-    @ArrayMaxSize(10)
+    @ArrayMaxSize(5)
     @Type(() => Number)
     @IsInt({each: true})
     asignadosId: number[]

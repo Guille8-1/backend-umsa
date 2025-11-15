@@ -223,14 +223,10 @@ export class ProjectsService {
       .json(`going forward editing a body project with the id ${id}`);
   }
 
-  async updateAssigness(
-    id: number,
-    updateAssigneed: UpdateAssigneesDto,
-    res: Response,
-  ) {
-    const { asignadosId } = updateAssigneed;
-
-    await this.projectRepository.update(id, {
+  async updateAssigness(updateUsers: UpdateAssigneesDto, res: Response) {
+    const { projectId, userId, asignadosId } = updateUsers;
+    console.log()
+    await this.projectRepository.update(projectId, {
       asignadosId: asignadosId,
     });
 
@@ -249,7 +245,7 @@ export class ProjectsService {
       newAssigned.push(userNewAssinged);
     }
 
-    await this.projectRepository.update(id, {
+    await this.projectRepository.update(projectId, {
       asignados: newAssigned,
     });
 

@@ -19,6 +19,9 @@ declare global {
     }
   }
 }
+const capFirstLetter = (name: string) => {
+  return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+};
 
 @Injectable()
 export class UsersService {
@@ -45,7 +48,11 @@ export class UsersService {
       where: { nombre },
     });
 
-    if (emialExists || nameExists) {
+    const lastName = await this.usersRepository.findOne({
+      where: { apellido },
+    });
+
+    if (emialExists || nameExists || lastName) {
       return res.status(401).json('Usuario Ya Registrado');
     }
 
@@ -57,15 +64,12 @@ export class UsersService {
 
     let isAdmin: boolean = true;
     isAdmin = nivel < 4;
-    const capFirstLetter = (name: string) => {
-      return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
-    };
     const lowerName = capFirstLetter(nombre);
     const lowerLastName = capFirstLetter(apellido);
 
     const registerUser = {
-      nombre: lowerName,
-      apellido: lowerLastName,
+      nombre: lowerName.trim(),
+      apellido: lowerLastName.trim(),
       email,
       password: hashedPw,
       admin: isAdmin,
@@ -151,17 +155,22 @@ export class UsersService {
 
   async userIds(id: GetUserByIds, res: Response) {
     const { ids } = id;
+    console.log(ids);
     const fullNames = ids.map((names) => {
       const [nombre, apellido] = names.split(' ');
+      console.log(nombre);
+      console.log('este es el apellido: ', apellido);
       return { nombre, apellido };
     });
+
     const responseId = await this.usersRepository.find({
       where: fullNames.map((fullName) => ({
-        nombre: fullName.nombre,
-        apellido: fullName.apellido,
+        nombre: capFirstLetter(fullName.nombre),
+        apellido: capFirstLetter(fullName.apellido),
       })),
       select: ['id', 'nombre', 'apellido'],
     });
+    console.log(responseId);
     return res.status(201).json(responseId);
   }
 

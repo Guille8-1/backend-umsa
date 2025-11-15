@@ -65,9 +65,9 @@ export class ProjectsController {
     return this.projectsService.updateProject(id, updateProject, res);
   }
 
-  @Patch('/updateusers/:id')
-  updateAssigness(@Param('id') id: number, @Body() updateAssignees: UpdateAssigneesDto, @Res() res: Response) {
-    return this.projectsService.updateAssigness(id, updateAssignees, res);
+  @Patch('/updateusers/')
+  updateAssigness(@Body() updateAssignees: UpdateAssigneesDto, @Res() res: Response) {
+    return this.projectsService.updateAssigness(updateAssignees, res);
   }
 
   @Delete(':paramId')
