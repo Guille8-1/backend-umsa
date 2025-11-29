@@ -158,19 +158,18 @@ export class UsersService {
     console.log(ids);
     const fullNames = ids.map((names) => {
       const [nombre, apellido] = names.split(' ');
-      console.log(nombre);
-      console.log('este es el apellido: ', apellido);
-      return { nombre, apellido };
+      const frstName = nombre.trim()
+      const lastName = apellido.trim()
+      return { frstName, lastName };
     });
 
     const responseId = await this.usersRepository.find({
       where: fullNames.map((fullName) => ({
-        nombre: capFirstLetter(fullName.nombre),
-        apellido: capFirstLetter(fullName.apellido),
+        nombre: capFirstLetter(fullName.frstName),
+        apellido: capFirstLetter(fullName.lastName),
       })),
       select: ['id', 'nombre', 'apellido'],
     });
-    console.log(responseId);
     return res.status(201).json(responseId);
   }
 
