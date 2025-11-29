@@ -3,7 +3,7 @@ import { Response } from 'express';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto, UpdateAssigneesDto } from './dto/update-project.dto';
-import { CommentProjectDto } from './dto/comments-project.dto'; 
+import { CommentProjectDto } from './dto/comments-project.dto';
 import { DeleteProjectDto } from './dto/delete-project.dto';
 import { TestDto } from './dto/test.test.dto';
 
@@ -11,7 +11,7 @@ import { TestDto } from './dto/test.test.dto';
 export class ProjectsController {
   constructor(
     private readonly projectsService: ProjectsService
-  ) {}
+  ) { }
   //testing dates update database intearctive
 
   @Get('/dates')
@@ -20,23 +20,23 @@ export class ProjectsController {
   }
 
   @Post('/test')
-  test(@Body() test:TestDto, @Res() res: Response){
-    
+  test(@Body() test: TestDto, @Res() res: Response) {
+
     return res.json('testing')
   }
 
   @Post('/create')
-  create(@Body() createProjectDto: CreateProjectDto, @Res() res:Response) {
+  create(@Body() createProjectDto: CreateProjectDto, @Res() res: Response) {
     return this.projectsService.createProject(createProjectDto, res);
   }
 
   @Post('/comment')
-  addComment(@Body() commentProject: CommentProjectDto, @Res() res: Response ){
-   return this.projectsService.createProjectComment(commentProject ,res)
+  addComment(@Body() commentProject: CommentProjectDto, @Res() res: Response) {
+    return this.projectsService.createProjectComment(commentProject, res)
   }
 
   @Get('/comment/project/:id')
-  gettingCommentProject(@Param('id') id:string, @Res() res:Response){
+  gettingCommentProject(@Param('id') id: string, @Res() res: Response) {
     return this.projectsService.gettingProjectComment(+id, res)
   }
 
@@ -46,13 +46,8 @@ export class ProjectsController {
   }
 
   @Get('/user/:id')
-  userProjects(@Param('id') id:string, @Res() res: Response){
+  userProjects(@Param('id') id: string, @Res() res: Response) {
     return this.projectsService.userProjects(+id, res)
-  }
-
-  @Get('/assigned/:assigned')
-  assignedProject(@Param('assigned') id:string, @Res() res: Response){
-    return this.projectsService.userAssigned(+id, res)
   }
 
   @Get(':id')

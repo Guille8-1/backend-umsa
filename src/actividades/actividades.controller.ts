@@ -18,7 +18,7 @@ import { Response } from 'express';
 
 @Controller('actividades')
 export class ActividadesController {
-  constructor(private readonly actividadesService: ActividadesService) {}
+  constructor(private readonly actividadesService: ActividadesService) { }
 
   @Post('/createactividad')
   //crear una nueva actividad
@@ -48,15 +48,9 @@ export class ActividadesController {
     return this.actividadesService.activityCommenet(+id, res);
   }
 
-
   @Get('/user/:id')
   userActivities(@Param('id') id: string, @Res() res: Response) {
     return this.actividadesService.userActivities(+id, res);
-  }
-
-  @Get('/assigned/:assigned')
-  assignedActivities(@Param('assigned') id: string, @Res() res: Response) {
-    return this.actividadesService.userActivityAssigned(+id, res);
   }
 
   @Patch(':id')

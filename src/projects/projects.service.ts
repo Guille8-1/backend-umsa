@@ -159,11 +159,28 @@ export class ProjectsService {
         },
       },
     });
-    return res.json(userProjects);
+    const usrAssigned = await this.userAssigned(id);
+    const jointPrj = userProjects.concat(usrAssigned);
+
+    const noRepeatedPrj = ( uniquePrj: any ) => {
+      const seenIds = new Set()
+      return uniquePrj.filter((prj: any)=>{
+        if(seenIds.has(prj.id)) return false
+        seenIds.add(prj.id)
+        return true
+      })
+    }
+    const uniqueProjects = noRepeatedPrj(jointPrj)
+
+    uniqueProjects.sort((a:any, b:any)=>b.id - a.id)
+
+    return res.json(uniqueProjects);
   }
 
-  async userAssigned(id: number, res: Response) {
-    const assignedId = id;
+  
+
+  async userAssigned(id: number) {
+    
     const assignedProject = await this.projectRepository
       .createQueryBuilder('project')
       .leftJoin('project.comentarios', 'comentarios')
@@ -186,9 +203,10 @@ export class ProjectsService {
       .andWhere('project.asignadosId IS NOT NULL')
       .andWhere('project.titulo IS NOT NULL')
       .andWhere('project.user IS NOT NULL')
-      .andWhere(':assignedId = Any(project.asignadosId)', { assignedId })
+      .andWhere(':id = Any(project.asignadosId)', { id })
       .getMany();
-    return res.status(200).json(assignedProject);
+
+      return assignedProject;
   }
 
   async findOneProject(id: number, res: Response) {
@@ -225,7 +243,6 @@ export class ProjectsService {
 
   async updateAssigness(updateUsers: UpdateAssigneesDto, res: Response) {
     const { projectId, userId, asignadosId } = updateUsers;
-    console.log()
     await this.projectRepository.update(projectId, {
       asignadosId: asignadosId,
     });

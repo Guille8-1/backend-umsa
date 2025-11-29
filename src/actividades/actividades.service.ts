@@ -20,7 +20,7 @@ export class ActividadesService {
     private readonly userRepository: Repository<Users>,
     @InjectRepository(CommentsActivities)
     private readonly commentActivity: Repository<CommentsActivities>,
-  ) {}
+  ) { }
 
   async createActividades(
     createActividadeDto: CreateActividadeDto,
@@ -38,7 +38,7 @@ export class ActividadesService {
       oficinaOrigenActividad,
       prioridadActividad,
     } = createActividadeDto;
-    const validateStatus = ['activo', 'pendiente'];
+    const validateStatus = ['activo', 'pendiente', 'mora'];
     if (validateStatus.some((validStatus) => estadoActividad === validStatus)) {
       const validActivity = await this.actividadesRepository.find({
         where: { estadoActividad: estadoActividad },
@@ -153,11 +153,26 @@ export class ActividadesService {
         },
       },
     });
-    return res.status(201).json(userActivities);
+
+    const assigned = await this.userActivityAssigned(id);
+    const jointAct = userActivities.concat(assigned);
+
+    const noRepeatedAct = (uniqueAct: any) => {
+      const seenIds = new Set();
+      return uniqueAct.filter((prj: any) => {
+        if (seenIds.has(prj.id)) return false;
+        seenIds.add(prj.id);
+        return true;
+      })
+    };
+
+    const uniqueAct = noRepeatedAct(jointAct);
+    uniqueAct.sort((a: any, b: any) => b.id - a.id);
+
+    return res.status(201).json(uniqueAct);
   }
 
-  async userActivityAssigned(id: number, res: Response) {
-    const activityId = id;
+  async userActivityAssigned(id: number) {
     const assignedActivity = await this.actividadesRepository
       .createQueryBuilder('activity')
       .leftJoin('activity.comentariosActivity', 'comentariosActivity')
@@ -180,11 +195,12 @@ export class ActividadesService {
       .andWhere('activity.asignadosActividadId IS NOT NULL')
       .andWhere('activity.tituloActividad IS NOT NULL')
       .andWhere('activity.user IS NOT NULL')
-      .andWhere(':activityId = Any(activity.asignadosActividadId)', {
-        activityId,
+      .andWhere(':id = Any(activity.asignadosActividadId)', {
+        id,
       })
       .getMany();
-    return res.status(201).json(assignedActivity);
+
+    return assignedActivity
   }
 
   update(id: number, updateActividadeDto: UpdateActividadeDto) {

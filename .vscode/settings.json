@@ -11,5 +11,6 @@
             "name": "saas_umsa",
             "group": "SAAS_DB"
         }
-    ]
+    ],
+    "typescript.tsdk": "node_modules/typescript/lib"
 }

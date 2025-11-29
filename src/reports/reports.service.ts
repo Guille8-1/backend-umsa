@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Projects } from 'src/projects/entities/projects.entity';
+import { Projects } from '../projects/entities/projects.entity';
 import { Between, IsNull, Not, Repository } from 'typeorm';
 import { Workbook } from 'exceljs';
 

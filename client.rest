@@ -16,13 +16,13 @@ Content-Type: application/json
 }
 
 ###
-//Login Resquest
+//Login Resquest getting a new token
 POST http://localhost:4000/auth/login-user
 Content-Type: application/json
 
 {
-    "email": "marcogaray662@gmail.com",
-    "password": "huevos1"
+    "email": "julianalvarez@gmail.com",
+    "password": "candados123"
 }
 
 ###
@@ -110,12 +110,14 @@ GET http://localhost:4000/auth/users
 
 //get admin projects
 ###
-GET http://localhost:4000/projects/user/97
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTgsIm5vbWJyZSI6Im1hcmNvIiwiYXBlbGxpZG8iOiJnYXJheSIsImFkbWluIjp0cnVlLCJpYXQiOjE3NDgxOTIzNTEsImV4cCI6MTc0ODIwNjc1MX0.Lb3hgndIhbPpIXZhY8td2Pj15GcWh1a_YyofWmYRQ3A
+GET http://localhost:4000/projects/user/17
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTcsIm5vbWJyZSI6Ikp1bGlhbiIsImFwZWxsaWRvIjoiQWx2YXJleiIsImFkbWluIjp0cnVlLCJpYXQiOjE3NjM3NDQzNDQsImV4cCI6MTc2Mzc1ODc0NH0.hH3k_81w4x6b5bQY4b-I7JtKQGJFTRrDee67LNBjF2o
 
 //Get assigned projects
 ###
-GET http://localhost:4000/projects/assigned/100
+GET http://localhost:4000/projects/assigned/17
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTcsIm5vbWJyZSI6Ikp1bGlhbiIsImFwZWxsaWRvIjoiQWx2YXJleiIsImFkbWluIjp0cnVlLCJpYXQiOjE3NjM2OTYyNjksImV4cCI6MTc2MzcxMDY2OX0.beRgkQJsdZ1KD_Px-9Ogzli7KOo8h8Ed-YfkN2VQHf4
+
 //get users ids
 ###
 POST http://localhost:4000/auth/userids
