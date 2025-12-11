@@ -28,7 +28,7 @@ export class UsersService {
   constructor(
     @InjectRepository(Users)
     private readonly usersRepository: Repository<Users>,
-  ) {}
+  ) { }
 
   async create(createUserDto: CreateUserDto, res: Response) {
     const { password, nombre, email, nivel, apellido } = createUserDto;
@@ -95,6 +95,8 @@ export class UsersService {
         apellido: true,
         nivel: true,
         admin: true,
+        accountOwner: true,
+        changedPw: true
       },
     });
     const formattedResponse = [...allUsers];
@@ -104,8 +106,10 @@ export class UsersService {
         id: user.id,
         name: user.nombre,
         lastName: user.apellido,
-        admin: adminLevel,
         nivel: user.nivel,
+        admin: adminLevel,
+        accountOwner: user.accountOwner,
+        changedPw: user.changedPw
       };
     });
     res.status(200).json(userResponse);
@@ -155,7 +159,6 @@ export class UsersService {
 
   async userIds(id: GetUserByIds, res: Response) {
     const { ids } = id;
-    console.log(ids);
     const fullNames = ids.map((names) => {
       const [nombre, apellido] = names.split(' ');
       const frstName = nombre.trim()

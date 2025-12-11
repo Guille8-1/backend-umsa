@@ -30,7 +30,7 @@ export class BearerTokenVerify implements NestMiddleware {
         });
       }
     } catch (err) {
-      console.error(err);
+      console.error('this is the error...', err);
       return res.status(401).json('Usuario No Autorizado');
     }
     next();

@@ -1,91 +1,101 @@
-import { Column, CreateDateColumn, UpdateDateColumn, Entity, PrimaryGeneratedColumn, ManyToOne, OneToMany, IsNull} from 'typeorm'
-import { Users } from '../../users/entities/user.entity' 
-import { Comments } from './comments.entity'
-import { ProjectsLog } from './logs.entity'
-
+import {
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
+import { Users } from '../../users/entities/user.entity';
+import { Comments } from './comments.entity';
+import { ProjectsLog } from './logs.entity';
 
 @Entity()
 export class Projects {
-    @PrimaryGeneratedColumn()
-    id: number
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({type:'varchar', length:100, nullable: true})
-    titulo: string
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  titulo: string;
 
-    @Column('text', {array: true})
-    asignados: string[]
+  @Column('text', { array: true })
+  asignados: string[];
 
-    @Column('int', {array: true, nullable: true})
-    asignadosId: number[]
+  @Column('int', { array: true, nullable: true })
+  asignadosId: number[];
 
-    @Column({type: 'varchar', length: 100, nullable: true})
-    tipoDocumento: string
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  tipoDocumento: string;
 
-    @Column({type:'varchar', length:50, nullable: true})
-    prioridad: string
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  prioridad: string;
 
-    @Column({type:'varchar', length:50, nullable: true})
-    tipoActividad: string
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  tipoActividad: string;
 
-    @Column({nullable: true})
-    citeNumero: string
+  @Column({ nullable: true })
+  citeNumero: string;
 
-    @Column({nullable: true})
-    rutaCv: string
+  @Column({ nullable: true })
+  rutaCv: string;
 
-    @Column({nullable: true})
-    avance: number
+  @Column({ nullable: true })
+  avance: number;
 
-    //se va a actulaizar solo en el momento de generacion del reporte
-    @Column({nullable: true})
-    diasActivo: number
-    
-    @Column({type:'varchar', length:20, nullable: true})
-    estado: string
+  //se va a actulaizar solo en el momento de generacion del reporte
+  @Column({ nullable: true })
+  diasActivo: number;
 
-    @Column({type:'varchar', length:200, nullable: true})
-    oficinaOrigen: string
+  @Column({ type: 'varchar', length: 20, nullable: true })
+  estado: string;
 
-    @Column({nullable: true})
-    fechaAtencion: number
+  @Column({ type: 'varchar', length: 200, nullable: true })
+  oficinaOrigen: string;
 
-    @Column({type:'varchar', length:40, nullable: true})
-    actualUsuario: string
+  @Column({ nullable: true })
+  fechaAtencion: number;
 
-    @Column({type:'varchar', length:40, nullable: true})
-    gestor: string
+  @Column({ type: 'varchar', length: 40, nullable: true })
+  actualUsuario: string;
 
-    @Column({type:'boolean', nullable: true})
-    isActive: boolean
+  @Column({ type: 'varchar', length: 40, nullable: true })
+  gestor: string;
 
-    @ManyToOne(() => Users, (users) => users.projects, {
-        nullable: true,
-        onDelete: 'SET NULL'
-    })
-    user: Users
+  @Column({ type: 'boolean', nullable: true })
+  isActive: boolean;
 
-    @OneToMany(() => Comments, (comment) => comment.project,{
-        cascade: true,
-        onDelete: 'CASCADE'
-    })
-    comentarios: Comments
+  @Column('int', { nullable: true })
+  editBy: number;
 
-    @OneToMany(()=> ProjectsLog, (log) => log.project,{
-        cascade: true,
-        onDelete: 'CASCADE'
-    })
-    logs: ProjectsLog
+  @ManyToOne(() => Users, (users) => users.projects, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  user: Users;
 
-    @CreateDateColumn({
-        type: 'timestamptz', 
-        default: () => 'CURRENT_TIMESTAMP',
-    })
-    createdDate: Date
+  @OneToMany(() => Comments, (comment) => comment.project, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  comentarios: Comments;
 
-    @UpdateDateColumn({
-        type: 'timestamptz',
-        default: () => 'CURRENT_TIMESTAMP',
-        onUpdate: 'CURRENT_TIMESTAMP'
-    })
-    updatedDate: Date
+  @OneToMany(() => ProjectsLog, (log) => log.project, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  logs: ProjectsLog;
+
+  @CreateDateColumn({
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  createdDate: Date;
+
+  @UpdateDateColumn({
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
+  updatedDate: Date;
 }

@@ -5,7 +5,10 @@ import { Activities } from './entities/actividade.entity';
 import { CommentsActivities } from './entities/actividadecoment.entity';
 import { Users } from '../users/entities/user.entity';
 import { Response } from 'express';
-import { UpdateActividadeDto } from './dto/update-actividade.dto';
+import {
+  UpdateActivityAssignees,
+  UpdateActivity,
+} from './dto/update-actividade.dto';
 import {
   CreateActividadeDto,
   CreateCommentActivityDto,
@@ -163,7 +166,7 @@ export class ActividadesService {
         if (seenIds.has(prj.id)) return false;
         seenIds.add(prj.id);
         return true;
-      })
+      });
     };
 
     const uniqueAct = noRepeatedAct(jointAct);
@@ -200,12 +203,54 @@ export class ActividadesService {
       })
       .getMany();
 
-    return assignedActivity
+    return assignedActivity;
   }
 
-  update(id: number, updateActividadeDto: UpdateActividadeDto) {
-    console.log(updateActividadeDto);
-    return `This action updates a #${id} actividade`;
+  async updateUsersActivity(
+    updateUsersActivity: UpdateActivityAssignees,
+    res: Response,
+  ) {
+    const { activityId, actAssId } = updateUsersActivity;
+    console.log(updateUsersActivity);
+    await this.actividadesRepository.update(activityId, {
+      asignadosActividadId: actAssId,
+    });
+    const assignedActNew = await this.userRepository.find({
+      where: {
+        id: In(actAssId),
+      },
+      select: ['nombre', 'apellido'],
+    });
+    const newActAssigned: string[] = [];
+
+    for (const newAss of assignedActNew) {
+      const { nombre, apellido } = newAss;
+      const userActNewAssigneed = `${nombre} ${apellido}`;
+      newActAssigned.push(userActNewAssigneed);
+    }
+    await this.actividadesRepository.update(activityId, {
+      asignadosActividad: newActAssigned,
+    });
+
+    return res.status(202).json(`Asinganos Cambiados`);
+  }
+
+  async newUsersActivity(id: number, res: Response) {
+    const newAssigAct = await this.actividadesRepository.find({
+      where: {
+        id: id,
+      },
+      select: ['asignadosActividad'],
+    });
+    const { asignadosActividad } = newAssigAct[0];
+    const newUsersJoint: string = asignadosActividad.join(", ");
+
+    return res.status(202).json(newUsersJoint);
+  }
+
+  async updateActivity(updateActivity: UpdateActivity, res: Response) {
+    console.log(updateActivity);
+    res.status(202).json(`testing end point for activity with id ${updateActivity.activityId}`);
   }
 
   remove(id: number) {

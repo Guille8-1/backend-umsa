@@ -162,25 +162,22 @@ export class ProjectsService {
     const usrAssigned = await this.userAssigned(id);
     const jointPrj = userProjects.concat(usrAssigned);
 
-    const noRepeatedPrj = ( uniquePrj: any ) => {
-      const seenIds = new Set()
-      return uniquePrj.filter((prj: any)=>{
-        if(seenIds.has(prj.id)) return false
-        seenIds.add(prj.id)
-        return true
-      })
-    }
-    const uniqueProjects = noRepeatedPrj(jointPrj)
+    const noRepeatedPrj = (uniquePrj: any) => {
+      const seenIds = new Set();
+      return uniquePrj.filter((prj: any) => {
+        if (seenIds.has(prj.id)) return false;
+        seenIds.add(prj.id);
+        return true;
+      });
+    };
+    const uniqueProjects = noRepeatedPrj(jointPrj);
 
-    uniqueProjects.sort((a:any, b:any)=>b.id - a.id)
+    uniqueProjects.sort((a: any, b: any) => b.id - a.id);
 
     return res.json(uniqueProjects);
   }
 
-  
-
   async userAssigned(id: number) {
-    
     const assignedProject = await this.projectRepository
       .createQueryBuilder('project')
       .leftJoin('project.comentarios', 'comentarios')
@@ -206,7 +203,7 @@ export class ProjectsService {
       .andWhere(':id = Any(project.asignadosId)', { id })
       .getMany();
 
-      return assignedProject;
+    return assignedProject;
   }
 
   async findOneProject(id: number, res: Response) {
@@ -218,31 +215,38 @@ export class ProjectsService {
     }
     return res.status(201).json(project);
   }
-
+  //update user function
+  //updateUserIdField = (id: number) => {};
   async updateProject(
     id: number,
     updateProject: UpdateProjectDto,
     res: Response,
   ) {
-    //const asignados = updateProjectDto.asignados;
-    // if (asignados) {
-    //   await this.projectRepository
-    //     .createQueryBuilder()
-    //     .update(Projects)
-    //     .where('id = :id', { id: updateProjectDto.id })
-    //     .set({
-    //       asignados: asignados,
-    //     })
-    //     .execute();
-    // }
+    const { estado, avance, documento, prioridad, idUser } = updateProject;
+    const numbAvance: number = +avance;
+    const numbUsrId: number = +idUser;
 
-    res
-      .status(201)
-      .json(`going forward editing a body project with the id ${id}`);
+    await this.projectRepository.update(id, {
+      estado: estado,
+      avance: numbAvance,
+      tipoDocumento: documento,
+      prioridad,
+      editBy: numbUsrId,
+    });
+
+    const titlePrj = await this.projectRepository.find({
+      where: {
+        id: id,
+      },
+      select: ['titulo'],
+    });
+    const { titulo } = titlePrj[0];
+
+    res.status(201).json(`${titulo.toUpperCase()}`);
   }
 
   async updateAssigness(updateUsers: UpdateAssigneesDto, res: Response) {
-    const { projectId, userId, asignadosId } = updateUsers;
+    const { projectId, asignadosId } = updateUsers;
     await this.projectRepository.update(projectId, {
       asignadosId: asignadosId,
     });
@@ -266,7 +270,7 @@ export class ProjectsService {
       asignados: newAssigned,
     });
 
-    return res.status(201).json(`Asignados Cambiados`);
+    return res.status(202).json(`Asignados Cambiados`);
   }
 
   async removeProject(id: number, res: Response) {

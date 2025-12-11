@@ -13,10 +13,13 @@ import {
   CreateActividadeDto,
   CreateCommentActivityDto,
 } from './dto/create-actividade.dto';
-import { UpdateActividadeDto } from './dto/update-actividade.dto';
+import {
+  UpdateActivity,
+  UpdateActivityAssignees,
+} from './dto/update-actividade.dto';
 import { Response } from 'express';
 
-@Controller('actividades')
+@Controller('/actividades')
 export class ActividadesController {
   constructor(private readonly actividadesService: ActividadesService) { }
 
@@ -53,12 +56,21 @@ export class ActividadesController {
     return this.actividadesService.userActivities(+id, res);
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateActividadeDto: UpdateActividadeDto,
+  @Get('/newusers/:id')
+  gettingNewActUsers(@Param('id') id: string, @Res() res: Response) {
+    return this.actividadesService.newUsersActivity(+id, res);
+  }
+
+  @Patch('/update/users')
+  updateAssignees(
+    @Body() updateActUsers: UpdateActivityAssignees,
+    @Res() res: Response,
   ) {
-    return this.actividadesService.update(+id, updateActividadeDto);
+    return this.actividadesService.updateUsersActivity(updateActUsers, res);
+  }
+  @Patch('/update')
+  updateActivity(@Body() updateActivity: UpdateActivity, @Res() res: Response) {
+    return this.actividadesService.updateActivity(updateActivity, res);
   }
 
   @Delete(':id')

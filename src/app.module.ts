@@ -30,7 +30,7 @@ import { SessionsModule } from './sessions/sessions.module';
     ThrottlerModule.forRoot([
       {
         ttl: 5000,
-        limit: 10,
+        limit: 8,
         blockDuration: 1000 * 2,
       },
     ]),
@@ -68,11 +68,11 @@ export class AppModule {
     consumer
       .apply(BearerTokenVerify)
       .forRoutes(
-        '/projects/*',
-        '/actividades/*',
-        '/users/*',
-        '/reports/*',
-        '/admin/update-pw',
+        '/projects/',
+        '/actividades/',
+        '/users/',
+        '/reports/',
+        '/admin/update-pw/',
       );
   }
 }
