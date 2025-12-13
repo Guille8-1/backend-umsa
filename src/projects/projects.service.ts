@@ -18,7 +18,7 @@ export class ProjectsService {
     private readonly commentRepository: Repository<Comments>,
     @InjectRepository(Users)
     private readonly userRepository: Repository<Users>,
-  ) {}
+  ) { }
 
   async createProject(createProjectDto: CreateProjectDto, res: Response) {
     const {
@@ -37,7 +37,7 @@ export class ProjectsService {
       prioridad,
     } = createProjectDto;
 
-    const validStatus = ['activo', 'pendiente', 'cerrado', 'mora'];
+    const validStatus = ['Activo', 'Pendiente', 'Cerrado', 'Mora'];
     if (validStatus.some((statusMatch) => estado === statusMatch)) {
       const validProject = await this.projectRepository.find({
         where: { estado: estado },

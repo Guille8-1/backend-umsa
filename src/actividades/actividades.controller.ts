@@ -73,6 +73,11 @@ export class ActividadesController {
     return this.actividadesService.updateActivity(updateActivity, res);
   }
 
+  @Get('/edited/:id')
+  editedActivity(@Param('id') id: string, @Res() res: Response) {
+    return this.actividadesService.editedBody(+id, res)
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.actividadesService.remove(+id);

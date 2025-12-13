@@ -29,7 +29,6 @@ export class ActividadesService {
     createActividadeDto: CreateActividadeDto,
     res: Response,
   ) {
-    console.log(createActividadeDto);
     const {
       user,
       tituloActividad,
@@ -41,7 +40,8 @@ export class ActividadesService {
       oficinaOrigenActividad,
       prioridadActividad,
     } = createActividadeDto;
-    const validateStatus = ['activo', 'pendiente', 'mora'];
+
+    const validateStatus = ['Activo', 'Pendiente', 'Mora'];
     if (validateStatus.some((validStatus) => estadoActividad === validStatus)) {
       const validActivity = await this.actividadesRepository.find({
         where: { estadoActividad: estadoActividad },
@@ -211,7 +211,6 @@ export class ActividadesService {
     res: Response,
   ) {
     const { activityId, actAssId } = updateUsersActivity;
-    console.log(updateUsersActivity);
     await this.actividadesRepository.update(activityId, {
       asignadosActividadId: actAssId,
     });
@@ -249,8 +248,34 @@ export class ActividadesService {
   }
 
   async updateActivity(updateActivity: UpdateActivity, res: Response) {
-    console.log(updateActivity);
-    res.status(202).json(`testing end point for activity with id ${updateActivity.activityId}`);
+    const { activityId, estadoAct, avanceAct, prioridadAct, idUser } = updateActivity;
+
+    await this.actividadesRepository.update(activityId, {
+      estadoActividad: estadoAct,
+      avanceActividad: +avanceAct,
+      prioridadActividad: prioridadAct,
+      editedBy: +idUser
+    })
+
+    res.status(202).json(`Actividad con el id: ${updateActivity.activityId} actualizada`);
+  }
+
+  async editedBody(id: number, res: Response) {
+    const activityRetrive = await this.actividadesRepository.find({
+      where: {
+        id: id
+      },
+      select: ['estadoActividad', 'avanceActividad', 'prioridadActividad']
+    });
+    const newActData = activityRetrive[0];
+
+    const data = {
+      estado: newActData.estadoActividad,
+      avance: newActData.avanceActividad,
+      prioridad: newActData.prioridadActividad
+    }
+
+    return res.status(201).json(data);
   }
 
   remove(id: number) {

@@ -49,6 +49,9 @@ export class Activities {
   @Column({ type: 'boolean' })
   isActive: boolean;
 
+  @Column('int', { nullable: true })
+  editedBy: number
+
   @ManyToOne(() => Users, (users) => users.actividades, {
     nullable: true,
     onDelete: 'SET NULL',
@@ -65,8 +68,8 @@ export class Activities {
   )
   comentariosActivity: CommentsActivities;
 
-  @OneToMany(()=> ActivitiesLog, (activityLog)=>activityLog.activity,{
-    cascade:true,
+  @OneToMany(() => ActivitiesLog, (activityLog) => activityLog.activity, {
+    cascade: true,
     onDelete: 'CASCADE'
   })
   logs: ActivitiesLog
