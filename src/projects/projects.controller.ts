@@ -19,11 +19,12 @@ import { TestDto } from './dto/test.test.dto';
 
 @Controller('/projects')
 export class ProjectsController {
-  constructor(private readonly projectsService: ProjectsService) {}
+  constructor(private readonly projectsService: ProjectsService) { }
   //testing dates update database intearctive
 
   @Get('/dates')
   updatingDates(@Res() res: Response) {
+    console.log('testing push from mac to git :(');
     return this.projectsService.testingDates(res);
   }
 
