@@ -278,6 +278,30 @@ export class ActividadesService {
     return res.status(201).json(data);
   }
 
+  async actividadesNumbers(res: Response) {
+    const actNumbers = await this.actividadesRepository.find({
+      where: {
+        estadoActividad: In(['Activo', 'activo', 'Cerrado', 'cerrado'])
+      }
+    });
+
+    const activeNumbers = actNumbers.filter((act) => act.estadoActividad === 'Activo' || act.estadoActividad === 'activo').length;
+    const closedNumbers = actNumbers.filter((act) => act.estadoActividad === 'Cerrado' || act.estadoActividad === 'cerrado').length;
+
+    const resActNumbers = [
+      {
+        title: 'Activos',
+        value: activeNumbers,
+      },
+      {
+        title: 'Cerrados',
+        value: closedNumbers,
+      },
+    ]
+
+    return res.status(202).json(resActNumbers);
+  }
+
   remove(id: number) {
     return `This action removes a #${id} actividade`;
   }

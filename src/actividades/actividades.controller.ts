@@ -39,6 +39,11 @@ export class ActividadesController {
   ) {
     return this.actividadesService.createActivityComment(createComment, res);
   }
+  //actividades numeros primero este endpoint para evitar errores
+  @Get('/numbers')
+  actividadesNumbers(@Res() res: Response) {
+    return this.actividadesService.actividadesNumbers(res)
+  }
 
   //obtener actividades con las relaciones comments y users basadas en parametros recibidos por el DTO
   @Get('/getactividades')
