@@ -28,15 +28,19 @@ export class ProjectsController {
     return this.projectsService.testingDates(res);
   }
 
+
+
   @Post('/test')
   test(@Body() test: TestDto, @Res() res: Response) {
     return res.json('testing');
   }
 
+
   @Post('/create')
   create(@Body() createProjectDto: CreateProjectDto, @Res() res: Response) {
     return this.projectsService.createProject(createProjectDto, res);
   }
+
 
   @Post('/comment')
   addComment(@Body() commentProject: CommentProjectDto, @Res() res: Response) {
@@ -57,11 +61,17 @@ export class ProjectsController {
   userProjects(@Param('id') id: string, @Res() res: Response) {
     return this.projectsService.userProjects(+id, res);
   }
+  @Get('/numbers')
+  projectNumbers(@Res() res: Response) {
+    return this.projectsService.returningNumbers(res);
+  }
 
+  //Este metodo GET con parametro solitario, produce que los metodos GET para abajo no funcionen a no ser que tengan paramateros definidos...
   @Get(':id')
   findOne(@Param('id') id: string, @Res() res: Response) {
     return this.projectsService.findOneProject(+id, res);
   }
+
 
   @Patch('/update/:id')
   update(
@@ -79,6 +89,18 @@ export class ProjectsController {
   ) {
     return this.projectsService.updateAssigness(updateAssignees, res);
   }
+
+
+  @Get('/new/body/:id')
+  updateProjectBody(@Param('id') id: string, @Res() res: Response) {
+    return this.projectsService.newBodyRequest(+id, res)
+  }
+
+  @Get('/assigned/newusers/:id')
+  newAssignees(@Param('id') id: string, @Res() res: Response) {
+    return this.projectsService.newPrjAssginees(+id, res);
+  }
+
 
   @Delete(':paramId')
   remove(

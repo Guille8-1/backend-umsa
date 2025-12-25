@@ -273,6 +273,26 @@ export class ProjectsService {
     return res.status(202).json(`Asignados Cambiados`);
   }
 
+  async newBodyRequest(id: number, res: Response) {
+    const newBodyProject = await this.projectRepository.find({
+      where: { id: id },
+      select: ['estado', 'avance', 'tipoDocumento', 'prioridad'],
+    });
+    const indexBody = newBodyProject[0];
+    return res.status(201).json(indexBody);
+  }
+
+  async newPrjAssginees(id: number, res: Response) {
+    const newAss = await this.projectRepository.find({
+      where: { id: id },
+      select: ['asignados']
+    });
+    const newAssData = newAss[0];
+    const acutalAssData = newAssData.asignados;
+
+    return res.status(202).json(acutalAssData);
+  }
+
   async removeProject(id: number, res: Response) {
     const project = await this.projectRepository.findOne({
       where: { id: id },
@@ -296,6 +316,29 @@ export class ProjectsService {
       .execute();
 
     return res.status(201).json(`Proyecto ${project.titulo} fue eliminado`);
+  }
+
+  async returningNumbers(res: Response) {
+    const prjNumbers = await this.projectRepository.find({
+      where: {
+        estado: In(['Activo', 'activo', 'Cerrado', 'cerrado'])
+      }
+    });
+
+    const prjActive = prjNumbers.filter((prj) => prj.estado === 'Activo' || prj.estado === 'activo').length;
+    const prjCerrado = prjNumbers.filter((prj) => prj.estado === 'Cerrado' || prj.estado === 'cerrado').length;
+
+    const resPrjNumbers = [
+      {
+        title: 'Activos',
+        value: prjActive,
+      },
+      {
+        title: 'Cerrados',
+        value: prjCerrado,
+      },
+    ]
+    return res.status(202).json(resPrjNumbers);
   }
 
   async testingDates(res: Response) {
