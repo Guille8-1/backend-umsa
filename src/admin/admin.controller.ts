@@ -17,7 +17,7 @@ import { UpdatePassword } from './dto/create-admin.dto';
 
 @Controller('admin')
 export class AdminController {
-  constructor(private readonly adminService: AdminService) {}
+  constructor(private readonly adminService: AdminService) { }
 
   @Post('/create-admin')
   create(@Body() createAdminDto: CreateAdminDto, @Res() res: Response) {

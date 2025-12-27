@@ -26,12 +26,12 @@ export class CreateAdminDto {
   @IsString({ message: 'Password No Valido' })
   @IsNotEmpty({ message: 'Password Vacio' })
   @MinLength(5, { message: 'Password No Valido' })
-  password: string;
+  masterPassword: string;
 
   @IsString({ message: 'Password No Valido' })
   @IsNotEmpty({ message: 'Password Vacio' })
   @MinLength(5, { message: 'Password No Valido' })
-  masterPassword: string;
+  password: string;
 
   @Type(() => Number)
   @IsInt()

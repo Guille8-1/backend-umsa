@@ -17,7 +17,7 @@ export class AdminService {
   constructor(
     @InjectRepository(Users)
     private readonly usersRepository: Repository<Users>,
-  ) {}
+  ) { }
   async create(createAdminDto: CreateAdminDto, res: Response) {
     const { nombre, apellido, email, password, masterPassword, nivel } =
       createAdminDto;

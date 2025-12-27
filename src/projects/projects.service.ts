@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { All, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, IsNull, Not, Repository } from 'typeorm';
 import { CreateProjectDto } from './dto/create-project.dto';
@@ -8,6 +8,7 @@ import { Comments } from './entities/comments.entity';
 import { Users } from '../users/entities/user.entity';
 import { CommentProjectDto } from './dto/comments-project.dto';
 import { Response } from 'express';
+import { merge } from 'rxjs';
 
 @Injectable()
 export class ProjectsService {
@@ -339,6 +340,44 @@ export class ProjectsService {
       },
     ]
     return res.status(202).json(resPrjNumbers);
+  }
+
+  async gettingPrjStats(res: Response) {
+    const prjStats = await this.userRepository.createQueryBuilder('u')
+      .leftJoin(
+        'projects',
+        'p',
+        'u.id = ANY(p."asignadosId")',
+      )
+      .select('u.id', 'id')
+      .addSelect('u.nombre', 'nombre')
+      .addSelect('u.apellido', 'apellido')
+      .addSelect(
+        "COUNT(*) FILTER (WHERE p.estado = 'Activo')",
+        "activePrj",
+      )
+      .addSelect(
+        "COUNT(*) FILTER (WHERE p.estado = 'Cerrado')",
+        "closedPrj",
+      )
+      .groupBy('u.id')
+      .addGroupBy('u.nombre')
+      .addGroupBy('u.apellido')
+      .getRawMany();
+
+    console.log('esto debe ser?', prjStats);
+
+    const prjDetails = await this.projectRepository.find({
+      where: {
+        estado: In(['Activo', 'Cerrado'])
+      }
+    })
+    const prjStatsResponse = prjStats.map((obj) => {
+      return {
+        fullName: `${obj.nombre} ${obj.apellido}`
+      }
+    })
+    return res.status(202).json('funcando desde stats');
   }
 
   async testingDates(res: Response) {

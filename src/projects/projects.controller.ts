@@ -24,11 +24,8 @@ export class ProjectsController {
 
   @Get('/dates')
   updatingDates(@Res() res: Response) {
-    console.log('testing push from mac to git :(');
     return this.projectsService.testingDates(res);
   }
-
-
 
   @Post('/test')
   test(@Body() test: TestDto, @Res() res: Response) {
@@ -64,6 +61,10 @@ export class ProjectsController {
   @Get('/numbers')
   projectNumbers(@Res() res: Response) {
     return this.projectsService.returningNumbers(res);
+  }
+  @Get('/stats')
+  projectStats(@Res() res: Response) {
+    return this.projectsService.gettingPrjStats(res);
   }
 
   //Este metodo GET con parametro solitario, produce que los metodos GET para abajo no funcionen a no ser que tengan paramateros definidos...
