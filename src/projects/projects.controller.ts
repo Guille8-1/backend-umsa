@@ -67,6 +67,11 @@ export class ProjectsController {
     return this.projectsService.gettingPrjStats(res);
   }
 
+  @Get('/urgency')
+  projectUrgency(@Res() res: Response) {
+    return this.projectsService.responseUrgency(res);
+  }
+
   //Este metodo GET con parametro solitario, produce que los metodos GET para abajo no funcionen a no ser que tengan paramateros definidos...
   @Get(':id')
   findOne(@Param('id') id: string, @Res() res: Response) {

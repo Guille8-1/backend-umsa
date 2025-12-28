@@ -302,6 +302,28 @@ export class ActividadesService {
     return res.status(202).json(resActNumbers);
   }
 
+  async actividadesPriority(res: Response) {
+    const priorityAct = await this.actividadesRepository.createQueryBuilder('act')
+      .select("count(case when act.prioridadActividad = 'Urgente' then 1 end)", "actUrgency")
+      .addSelect("count(case when act.diasActivoActividad >= '4' then 1 end)", "actDias")
+      .getRawOne()
+
+    const { actUrgency, actDias } = priorityAct;
+
+    const actActUrgency = [
+      {
+        title: 'Urgente',
+        value: +actUrgency
+      },
+      {
+        title: 'Dias Activo',
+        value: +actDias
+      }
+    ]
+
+    return res.status(202).json(actActUrgency);
+  }
+
   remove(id: number) {
     return `This action removes a #${id} actividade`;
   }

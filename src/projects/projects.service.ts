@@ -320,23 +320,21 @@ export class ProjectsService {
   }
 
   async returningNumbers(res: Response) {
-    const prjNumbers = await this.projectRepository.find({
-      where: {
-        estado: In(['Activo', 'activo', 'Cerrado', 'cerrado'])
-      }
-    });
+    const prjNumbers = await this.projectRepository.createQueryBuilder('p')
+      .select("count(case when p.estado = 'Activo' then 1 end)", "activePrj")
+      .addSelect("count(case when p.estado = 'Cerrado' then 1 end)", "closedPrj")
+      .getRawOne();
 
-    const prjActive = prjNumbers.filter((prj) => prj.estado === 'Activo' || prj.estado === 'activo').length;
-    const prjCerrado = prjNumbers.filter((prj) => prj.estado === 'Cerrado' || prj.estado === 'cerrado').length;
+    const { activePrj, closedPrj } = prjNumbers;
 
     const resPrjNumbers = [
       {
         title: 'Activos',
-        value: prjActive,
+        value: activePrj,
       },
       {
         title: 'Cerrados',
-        value: prjCerrado,
+        value: closedPrj,
       },
     ]
     return res.status(202).json(resPrjNumbers);
@@ -365,19 +363,35 @@ export class ProjectsService {
       .addGroupBy('u.apellido')
       .getRawMany();
 
-    console.log('esto debe ser?', prjStats);
-
-    const prjDetails = await this.projectRepository.find({
-      where: {
-        estado: In(['Activo', 'Cerrado'])
-      }
-    })
     const prjStatsResponse = prjStats.map((obj) => {
       return {
-        fullName: `${obj.nombre} ${obj.apellido}`
+        name: `${obj.nombre} ${obj.apellido}`,
+        Activos: obj.activePrj,
+        Cerrados: obj.closedPrj
       }
     })
-    return res.status(202).json('funcando desde stats');
+    return res.status(202).json(prjStatsResponse);
+  }
+
+  async responseUrgency(res: Response) {
+    const prjUrgency = await this.projectRepository.createQueryBuilder('p')
+      .select("count(case when p.prioridad = 'Urgente' then 1 end)", "urgentCount")
+      .addSelect("count(case when p.diasActivo >= '4' then 1 end)", "daysUrg")
+      .getRawOne();
+
+    const { urgentCount, daysUrg } = prjUrgency
+
+    const urgencyRes = [
+      {
+        title: 'Urgente',
+        value: +urgentCount
+      },
+      {
+        title: 'Dias Activo',
+        value: +daysUrg
+      }
+    ]
+    return res.status(202).json(urgencyRes);
   }
 
   async testingDates(res: Response) {

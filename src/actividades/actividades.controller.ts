@@ -45,6 +45,11 @@ export class ActividadesController {
     return this.actividadesService.actividadesNumbers(res)
   }
 
+  @Get('/priority')
+  actividadesPriority(@Res() res: Response) {
+    return this.actividadesService.actividadesPriority(res)
+  }
+
   //obtener actividades con las relaciones comments y users basadas en parametros recibidos por el DTO
   @Get('/getactividades')
   findAll(@Res() res: Response) {
