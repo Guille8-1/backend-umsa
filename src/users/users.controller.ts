@@ -20,7 +20,7 @@ import {
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Post('/create-user')
   create(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
@@ -62,9 +62,9 @@ export class UsersController {
 
   @Delete('/delete/:id')
   deleteUser(
-    @Param(new ValidationPipe()) params: GetUserDto,
+    @Param("id") id: string,
     @Res() res: Response,
   ) {
-    return this.usersService.deleteUser(params.userId, res);
+    return this.usersService.deleteUser(+id, res);
   }
 }

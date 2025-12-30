@@ -279,14 +279,12 @@ export class ActividadesService {
   }
 
   async actividadesNumbers(res: Response) {
-    const actNumbers = await this.actividadesRepository.find({
-      where: {
-        estadoActividad: In(['Activo', 'activo', 'Cerrado', 'cerrado'])
-      }
-    });
+    const actNumbers = await this.actividadesRepository.createQueryBuilder('act')
+      .select("count(case when act.estadoActividad = 'Activo' then 1 end)", "activeNumbers")
+      .addSelect("count(case when act.estadoActividad = 'Cerrado' then 1 end)", "closedNumbers")
+      .getRawOne();
 
-    const activeNumbers = actNumbers.filter((act) => act.estadoActividad === 'Activo' || act.estadoActividad === 'activo').length;
-    const closedNumbers = actNumbers.filter((act) => act.estadoActividad === 'Cerrado' || act.estadoActividad === 'cerrado').length;
+    const { activeNumbers, closedNumbers } = actNumbers;
 
     const resActNumbers = [
       {
@@ -322,6 +320,32 @@ export class ActividadesService {
     ]
 
     return res.status(202).json(actActUrgency);
+  }
+
+  async gettingActStats(res: Response) {
+    const actStats = await this.userRepository.createQueryBuilder('u')
+      .leftJoin(
+        'activities',
+        'act',
+        'u.id = ANY(act."asignadosActividadId")',
+      )
+      .select('u.id', 'id')
+      .addSelect('u.nombre', 'nombre')
+      .addSelect('u.apellido', 'apellido')
+      .addSelect("COUNT(*) FILTER(WHERE act.estadoActividad = 'Activo')", "actividadAct",)
+      .addSelect("COUNT(*) FILTER(WHERE act.estadoActividad = 'Cerrado')", "actividadClosed",)
+      .groupBy('u.id')
+      .addGroupBy('u.nombre')
+      .addGroupBy('u.apellido')
+      .getRawMany()
+    const actStatsResponse = actStats.map((act) => {
+      return {
+        name: `${act.nombre} ${act.apellido}`,
+        Activos: act.actividadAct,
+        Cerrados: act.actividadClosed
+      }
+    })
+    return res.status(202).json(actStatsResponse);
   }
 
   remove(id: number) {

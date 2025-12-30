@@ -40,6 +40,11 @@ export class ActividadesController {
     return this.actividadesService.createActivityComment(createComment, res);
   }
   //actividades numeros primero este endpoint para evitar errores
+  @Get('/stats')
+  activitiesStats(@Res() res: Response) {
+    return this.actividadesService.gettingActStats(res);
+  }
+
   @Get('/numbers')
   actividadesNumbers(@Res() res: Response) {
     return this.actividadesService.actividadesNumbers(res)

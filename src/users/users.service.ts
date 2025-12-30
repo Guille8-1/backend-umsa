@@ -181,6 +181,10 @@ export class UsersService {
       where: { id: id },
       relations: ['projects'],
     });
+    if (!user) {
+      return res.status(503).json('Usuario No Encontrado')
+    }
+    const { nombre, apellido } = user
 
     await this.usersRepository
       .createQueryBuilder()
@@ -190,6 +194,6 @@ export class UsersService {
 
     res
       .status(201)
-      .json(`Usuario ${user.nombre + user.apellido} fue eliminado`);
+      .json(`Usuario ${nombre} ${apellido} fue eliminado`);
   }
 }
