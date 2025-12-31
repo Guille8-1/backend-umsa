@@ -9,6 +9,7 @@ import {
   MinLength,
   ArrayNotEmpty,
   IsArray,
+  IsBoolean
 } from 'class-validator';
 
 export class CreateUserDto {
@@ -58,18 +59,10 @@ export class GetUserByIds {
 }
 
 export class UpdateUserDto {
-  @IsString({ message: 'Nombre no Valido' })
-  @IsNotEmpty({ message: 'Nombre no Valido' })
-  @MinLength(3, { message: 'Nombre de Usuario No Valido' })
-  nombre: string;
-
-  @IsString({ message: 'Nombre no Valido' })
-  @IsNotEmpty({ message: 'Nombre no Valido' })
-  @MinLength(3, { message: 'Nombre de Usuario No Valido' })
-  apellido: string;
-
-  @IsEmail({}, { message: 'Email Invalido' })
-  email: string;
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  id: number
 
   @Type(() => Number)
   @IsInt()

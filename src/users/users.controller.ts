@@ -55,9 +55,9 @@ export class UsersController {
     return this.usersService.getUserById(params.userId, res);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  @Patch('/edit/:id/:nivel')
+  update(@Param('id') id: string, @Param('nivel') nivel: string, @Res() res: Response) {
+    return this.usersService.update(+id, +nivel, res);
   }
 
   @Delete('/delete/:id')

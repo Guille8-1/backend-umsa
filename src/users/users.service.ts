@@ -99,15 +99,15 @@ export class UsersService {
         changedPw: true
       },
     });
+    PerformanceObserverEntryList
     const formattedResponse = [...allUsers];
     const userResponse = formattedResponse.map((user) => {
-      const adminLevel: string = user.admin ? 'si' : 'no';
       return {
         id: user.id,
         name: user.nombre,
         lastName: user.apellido,
         nivel: user.nivel,
-        admin: adminLevel,
+        admin: user.admin,
         accountOwner: user.accountOwner,
         changedPw: user.changedPw
       };
@@ -152,9 +152,21 @@ export class UsersService {
     return res.status(201).json(responseId);
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    console.log(updateUserDto);
-    return `This action updates a #${id} user`;
+  async update(id: number, nivel: number, res: Response) {
+    let admin: boolean;
+
+    nivel === 4 ? admin = false : admin = true;
+
+    await this.usersRepository.update(id, {
+      nivel,
+      admin
+    });
+
+    const userData = await this.usersRepository.findOne({
+      where: { id }
+    });
+    const { nombre, apellido } = userData;
+    return res.status(201).json(`El usuario ${nombre} ${apellido} fue modificado`);
   }
 
   async userIds(id: GetUserByIds, res: Response) {

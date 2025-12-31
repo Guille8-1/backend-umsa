@@ -270,7 +270,6 @@ export class ProjectsService {
     await this.projectRepository.update(projectId, {
       asignados: newAssigned,
     });
-
     return res.status(202).json(`Asignados Cambiados`);
   }
 
